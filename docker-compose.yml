@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mysql:
+    container_name: mysql-local-5.7
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - "mysql-data:/var/lib/mysql"
+
+  adminer:
+      container_name: adminer-local
+      image: adminer
+      ports:
+        - 8080:8080  # You can choose a different host port if 8080 is already in use
+
+volumes:
+  mysql-data:
+    driver: local
