@@ -29,10 +29,14 @@ class AdminController extends AbstractController
         return $response;
     }
 
-    // get userInfo
     #[Route('/user/{id}', name: 'app_user', methods: ['GET'])]
-    public function getUserInfo(String $id): Response
-    {
-        return $this->json(['info_utilisateur' => $this->apiService->getUserInfo($id)]);
+    public function getUserInfo(String $id): JsonResponse
+    { 
+        // try {
+            return $this->json($this->apiService->getUserInfo($id));
+        // }
+        // catch (\Exception $e) {
+        //     return $this->json(['error' => $e->getMessage()]);
+        // }
     }
 }

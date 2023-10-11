@@ -2,92 +2,96 @@
 
 namespace App\Service;
 
-use App\Dto\NiveauDto;
-use App\Dto\OrganisationDto;
-use App\Dto\UtilisateurDto;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use App\Controller\Http\Responses\HabilitationReponse;
+use Psr\Log\LoggerInterface;
+use App\Service\Utils\ApiUtils;
 
 class ApiService
 {
-    private HttpClientInterface $client;
+    private LoggerInterface $logger;
+    private ApiUtils $apiUtils;
+    private $infosUtilisateur;
+    private HabilitationReponse $response;
+    private string $ipe;
 
-
-    public function __construct(HttpClientInterface $client)
+    public function __construct(LoggerInterface $logger, ApiUtils $apiUtils)
     {
-        $this->client = $client;
+        $this->logger = $logger;
+        $this->apiUtils = $apiUtils;
+        $this->response = new HabilitationReponse();
     }
 
     /**
      * Get user info from devel-plage-infoservice
      * 
      * @param String $idUser
-     * @return UtilisateurDto
+     * @return array
      */
-    public function getUserInfo(String $idUser): UtilisateurDto
+    public function getUserInfo(String $idUser): array
     {
-        try {
-            $response = $this->client->request(
-                'GET',
-                'https://devel-plage-infoservice.atih.sante.fr/plage-infoservice/getUserInfo.do',
-                [
-                    'query' => [
-                        'idUser' => $idUser,
-                    ],
-                ]
-            );
-        } catch (\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface $e) {
-            return ['error' => $e->getMessage()];
-        }
+        $this->logger->info('Get user info from devel-plage-infoservice', ['idUser' => $idUser]);
 
-        $xml = simplexml_load_string($response->getContent());
+        $this->getUserAcces($idUser);
 
-        $infosUtilisateur = $this->formatXml($xml);
+        $this->getGestAuthHabilitations();
 
-        $utilisateurDto = $this->mapToUtilisateurDto($infosUtilisateur);
+        $this->getDomainesPlageHabilitations();
 
-        return $utilisateurDto;
+        return $this->response->toArray();
     }
 
-    private function formatXml($xml): array
+    private function getUserAcces(string $idUser): void
     {
+        /**
+         * 1 - Récupération des informations et des droits de l’utilisateur
+         * 
+         * .1 Appel à “infoservice”
+         * .2 Parser les “domaines-rôles” pour récupérer les rôles du domaine “SCANSANTE”
+         */
+        $this->infosUtilisateur = $this->apiUtils->getDevelPlageXml($idUser);
 
-        $roles_scansante = [];
+        // Stock l'ipe pour l'etape 3
+        $this->ipe = isset($this->infosUtilisateur->ipe) ? (string) $this->infosUtilisateur->ipe : null;
 
-        foreach ($xml->drs->dr->roles->role as $role) {
-            array_push($roles_scansante, (string) $role->libelle);
+        if ($this->infosUtilisateur === null) {
+            $this->logger->error('Erreur lors de la récupération des informations de l\'utilisateur', ['idUser' => $idUser]);
+            throw new \Exception('Erreur lors de la récupération des informations de l\'utilisateur');
+        } else if ($this->infosUtilisateur->exception) {
+            $this->logger->error($this->infosUtilisateur->exception->libelle, ['idUser' => $idUser]);
+            throw new \Exception($this->infosUtilisateur->exception->libelle);
         }
 
-        $infosUtilisateur = [
-            'id' => (int) $xml->id,
-            'nom' => (string) $xml->nom,
-            'prenom' => (string) $xml->prenom,
-            'email' => (string) $xml->email,
-            'niveau' => [
-                'id' => (int) $xml->niveau->id,
-                'libelle' => (string) $xml->niveau->libelle,
-            ],
-            'organisation' => [
-                'id' => (string) $xml->organisation->id,
-                'libelle' => (string) $xml->organisation->libelle,
-            ],
-            'roles_scansante' => $roles_scansante
-        ];
+        $this->infosUtilisateur = $this->apiUtils->formatInfoUserXml($this->infosUtilisateur);
+        $this->infosUtilisateur = $this->apiUtils->mapToUtilisateurDto($this->infosUtilisateur);
 
-        return $infosUtilisateur;
+        $this->response->setInfoUtilisateur($this->infosUtilisateur);
     }
 
-    private function mapToUtilisateurDto(array $infosUtilisateur): UtilisateurDto
+    private function getGestAuthHabilitations(): void
     {
-        $utilisateurDto = new UtilisateurDto(
-            $infosUtilisateur['id'],
-            $infosUtilisateur['nom'],
-            $infosUtilisateur['prenom'],
-            $infosUtilisateur['email'],
-            new NiveauDto($infosUtilisateur['niveau']['id'], $infosUtilisateur['niveau']['libelle']),
-            new OrganisationDto($infosUtilisateur['organisation']['id'], $infosUtilisateur['organisation']['libelle']),
-            $infosUtilisateur['roles_scansante'],
-        );
+        /**
+         * 2 - Récupération des habilitations issues de GESTAUTH
+         * 
+         * .1 Récupérer les habilitations déclarées dans GESTAUTH via la table organisation_autorisation
+         * .2 Parser les “domaines-rôles” pour récupérer les rôles du domaine “SCANSANTE”
+         */
+        $habilitationsOrganisations = $this->apiUtils->getHabilitationsOrganisations($this->infosUtilisateur->organisation->id);
 
-        return $utilisateurDto;
+        $this->response->setHabilitationsOrganisation($habilitationsOrganisations);
+    }
+
+    private function getDomainesPlageHabilitations(): void
+    {
+        /**
+         * 3 - Récupération des habilitations issues des domaines Plage
+         * .1 Dans le cas d’un niveau établissement,
+         *    il faut voir si certains domaines sont présents pour cette structure,
+         *    et si oui donner l’information en sortie.
+         */
+        if ($this->infosUtilisateur->niveau->id === 3) { // TODO: recup niveau etablissement id via la database
+            $finessDomainsXml = $this->apiUtils->getESInfoXml($this->ipe);
+            $finessDomains = $this->apiUtils->formatESInfoXml($finessDomainsXml);
+            $this->response->setHabilitationsDomaines($finessDomains);
+        }
     }
 }

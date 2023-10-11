@@ -2,8 +2,6 @@
 
 namespace App\Dto;
 
-use App\Entity\Utilisateur;
-
 class UtilisateurDto
 {
     public int $id;
@@ -27,7 +25,7 @@ class UtilisateurDto
         string $email,
         NiveauDTO $niveau,
         OrganisationDTO $organisation,
-        array $rolesScansante
+        array $rolesScansante,
     ) {
         $this->id = $id;
         $this->nom = $nom;
@@ -36,18 +34,5 @@ class UtilisateurDto
         $this->niveau = $niveau;
         $this->organisation = $organisation;
         $this->rolesScansante = $rolesScansante;
-    }
-
-    public static function fromEntity(Utilisateur $utilisateur): self
-    {
-        return new self(
-            $utilisateur->getId(),
-            $utilisateur->getNom(),
-            $utilisateur->getPrenom(),
-            $utilisateur->getEmail(),
-            NiveauDTO::fromEntity($utilisateur->getNiveau()),
-            OrganisationDTO::fromEntity($utilisateur->getOrganisation()),
-            $utilisateur->getRolesScansante()
-        );
     }
 }

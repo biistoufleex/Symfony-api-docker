@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231010135535 extends AbstractMigration
+final class Version20231011121125 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20231010135535 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE habilitations_organisation (id INT AUTO_INCREMENT NOT NULL, date_debut VARCHAR(255) NOT NULL, date_fin VARCHAR(255) DEFAULT NULL, perimetre VARCHAR(255) NOT NULL, type_autorisation VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE organisation_autorisation CHANGE perimetre perimetre VARCHAR(50) NOT NULL, CHANGE type_autorisation type_autorisation VARCHAR(50) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE habilitations_organisation');
+        $this->addSql('ALTER TABLE organisation_autorisation CHANGE perimetre perimetre LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', CHANGE type_autorisation type_autorisation LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\'');
     }
 }
