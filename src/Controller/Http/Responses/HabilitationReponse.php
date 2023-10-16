@@ -6,10 +6,12 @@ use App\Dto\UtilisateurDto;
 
 class HabilitationReponse
 {
-    public ?UtilisateurDto $info_utilisateur = null;
-    public ?array $habilitations_organisation = null;
-    public ?array $habilitations_domaines = null;
-    public ?array $habilitations_scansante = null;
+
+    private array $retour = [];
+    private ?UtilisateurDto $info_utilisateur = null;
+    private ?array $habilitations_organisation = null;
+    private ?array $habilitations_domaines = null;
+    private ?array $habilitations_scansante = null;
 
     public function __construct()
     {
@@ -39,7 +41,7 @@ class HabilitationReponse
         return $this;
     }
 
-    public function getHabilitationsDomaines(): array
+    public function getHabilitationsDomaines(): ?array
     {
         return $this->habilitations_domaines;
     }
@@ -63,9 +65,22 @@ class HabilitationReponse
         return $this;
     }
 
+    public function getRetour(): array
+    {
+        return $this->retour;
+    }
+
+    public function setRetour(array $retour): self
+    {
+        $this->retour = $retour;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return [
+            'retour' => $this->retour,
             'info_utilisateur' => $this->info_utilisateur,
             'habilitations_organisation' => $this->habilitations_organisation,
             'habilitations_domaines' => $this->habilitations_domaines,
@@ -81,5 +96,5 @@ class HabilitationReponse
     public function __toString(): string
     {
         return $this->toJson();
-    }       
+    }
 }

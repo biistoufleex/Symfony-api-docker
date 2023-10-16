@@ -3,16 +3,17 @@
 namespace App\Service;
 
 use App\Controller\Http\Responses\HabilitationReponse;
-use Psr\Log\LoggerInterface;
+use App\Controller\Http\Responses\Status;
 use App\Service\Utils\ApiUtils;
+use Psr\Log\LoggerInterface;
 
 class ApiService
 {
     private LoggerInterface $logger;
     private ApiUtils $apiUtils;
-    private $infosUtilisateur;
+    private $data;
     private HabilitationReponse $response;
-    private string $ipe;
+    private ?String $ipe;
 
     public function __construct(LoggerInterface $logger, ApiUtils $apiUtils)
     {
@@ -37,6 +38,9 @@ class ApiService
 
         $this->getDomainesPlageHabilitations();
 
+        $this->getRoleScanSante();
+
+        $this->response->setRetour(Status::ok()->toArray());
         return $this->response->toArray();
     }
 
@@ -48,23 +52,23 @@ class ApiService
          * .1 Appel à “infoservice”
          * .2 Parser les “domaines-rôles” pour récupérer les rôles du domaine “SCANSANTE”
          */
-        $this->infosUtilisateur = $this->apiUtils->getDevelPlageXml($idUser);
+        $this->data = $this->apiUtils->getDevelPlageXml($idUser);
 
-        // Stock l'ipe pour l'etape 3
-        $this->ipe = isset($this->infosUtilisateur->ipe) ? (string) $this->infosUtilisateur->ipe : null;
-
-        if ($this->infosUtilisateur === null) {
+        if ($this->data === null) {
             $this->logger->error('Erreur lors de la récupération des informations de l\'utilisateur', ['idUser' => $idUser]);
             throw new \Exception('Erreur lors de la récupération des informations de l\'utilisateur');
-        } else if ($this->infosUtilisateur->exception) {
-            $this->logger->error($this->infosUtilisateur->exception->libelle, ['idUser' => $idUser]);
-            throw new \Exception($this->infosUtilisateur->exception->libelle);
+        } else if ($this->data->exception) {
+            $this->logger->error($this->data->exception->libelle, ['idUser' => $idUser]);
+            throw new \Exception($this->data->exception->libelle);
         }
 
-        $this->infosUtilisateur = $this->apiUtils->formatInfoUserXml($this->infosUtilisateur);
-        $this->infosUtilisateur = $this->apiUtils->mapToUtilisateurDto($this->infosUtilisateur);
+        // Stock l'ipe pour l'etape 3
+        $this->ipe = isset($this->data->ipe) ? (string) $this->data->ipe : null;
 
-        $this->response->setInfoUtilisateur($this->infosUtilisateur);
+        $this->data = $this->apiUtils->formatInfoUserXml($this->data);
+        $this->data = $this->apiUtils->mapToUtilisateurDto($this->data);
+
+        $this->response->setInfoUtilisateur($this->data);
     }
 
     private function getGestAuthHabilitations(): void
@@ -75,8 +79,7 @@ class ApiService
          * .1 Récupérer les habilitations déclarées dans GESTAUTH via la table organisation_autorisation
          * .2 Parser les “domaines-rôles” pour récupérer les rôles du domaine “SCANSANTE”
          */
-        $habilitationsOrganisations = $this->apiUtils->getHabilitationsOrganisations($this->infosUtilisateur->organisation->id);
-
+        $habilitationsOrganisations = $this->apiUtils->getHabilitationsOrganisations($this->data->organisation->id);
         $this->response->setHabilitationsOrganisation($habilitationsOrganisations);
     }
 
@@ -88,10 +91,35 @@ class ApiService
          *    il faut voir si certains domaines sont présents pour cette structure,
          *    et si oui donner l’information en sortie.
          */
-        if ($this->infosUtilisateur->niveau->id === 3) { // TODO: recup niveau etablissement id via la database
+
+        $this->response->setHabilitationsDomaines([]);
+
+        if ($this->data->niveau->id === 3) { // TODO: recup niveau etablissement id via la database
             $finessDomainsXml = $this->apiUtils->getESInfoXml($this->ipe);
             $finessDomains = $this->apiUtils->formatESInfoXml($finessDomainsXml);
             $this->response->setHabilitationsDomaines($finessDomains);
         }
+    }
+
+    private function getRoleScanSante(): void
+    {
+        /**
+         * 4 - Détermination des rôles propres à Scansanté
+         * .1 En fonction des rôles du domaines SCANSANTE et des habilitations 
+         *    on détermine les rôles propres à l’application Scansanté
+         */
+
+        // TODO: 17441 - que faire en cas d'absence de habilitationsDomaines ?
+        if (!$this->response->getHabilitationsDomaines()) {
+            throw new \Exception('Erreur lors de la récupération des habilitations issues des domaines Plage');
+        }
+
+        $roleScanSante = ['lecteur'];
+
+        foreach ($this->response->getHabilitationsDomaines() as $habilitationDomaine) {
+            $roleScanSante[] = "lecteur_" . $habilitationDomaine['perimetre'];
+        }
+
+        $this->response->setHabilitationsScansante($roleScanSante);
     }
 }

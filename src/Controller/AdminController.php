@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\Http\Responses\Status;
+use App\Service\ApiService;
 
 #[Route('/admin', name: 'app_admin')]
 class AdminController extends AbstractController
@@ -31,12 +31,13 @@ class AdminController extends AbstractController
 
     #[Route('/user/{id}', name: 'app_user', methods: ['GET'])]
     public function getUserInfo(String $id): JsonResponse
-    { 
-        // try {
+    {
+        try {
             return $this->json($this->apiService->getUserInfo($id));
-        // }
-        // catch (\Exception $e) {
-        //     return $this->json(['error' => $e->getMessage()]);
-        // }
+        } catch (\Exception $e) {
+            return $this->json([
+                'retour' => Status::error($e->getMessage())->toArray()
+            ]);
+        }
     }
 }

@@ -32,7 +32,7 @@ class ApiUtils
      * This method sends a GET request to the Devel Plage InfoService API to fetch user information
      * based on the provided user ID. The user information is returned as an XML document in the response.
      *
-     * @param string $idUser The user ID for which to fetch information.
+     * @param String $idUser The user ID for which to fetch information.
      *
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the user information in XML format
      *                            or null if an error occurs during the request.
@@ -57,19 +57,18 @@ class ApiUtils
         } catch (\Exception $e) {
             return null;
         }
-
         return $xml;
     }
 
     /**
-     * Formats user information from an XML response into an array.
+     * Formats user information from an XML response into an Array.
      *
      * This method takes an XML object as input and extracts relevant user information from it.
-     * The extracted information is then organized into an associative array and returned.
+     * The extracted information is then organized into an associative Array and returned.
      *
      * @param SimpleXMLElement $xml The XML object containing user information.
      *
-     * @return array An associative array containing formatted user information.
+     * @return Array An associative Array containing formatted user information.
      */
     public function formatInfoUserXml($xml): array
     {
@@ -80,7 +79,7 @@ class ApiUtils
         if (isset($xml->drs->dr->roles->role)) {
             foreach ($xml->drs->dr->roles->role as $role) {
                 if ($role) {
-                    array_push($roles_scansante, (string) $role->libelle);
+                    Array_push($roles_scansante, (string) $role->libelle);
                 }
             }
         }
@@ -110,14 +109,14 @@ class ApiUtils
      * This method sends a GET request to the Devel Plage InfoService API to fetch Establishment information
      * based on the provided Establishment ID (EPI). The Establishment information is returned as an XML document in the response.
      *
-     * @param string $epi The Establishment ID (EPI) for which to fetch information.
+     * @param String $epi The Establishment ID (EPI) for which to fetch information.
      *
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the Establishment information in XML format
      *                            or null if an error occurs during the request.
      *
      * @throws \Exception If an exception occurs while making the API request, it is caught, and null is returned.
      */
-    public function getESInfoXml(string $epi): ?SimpleXMLElement
+    public function getESInfoXml(String $epi): ?SimpleXMLElement
     {
         try {
             $response = $this->client->request(
@@ -131,7 +130,7 @@ class ApiUtils
                 ]
             );
 
-            $xml = simplexml_load_string($response->getContent());
+            $xml = simplexml_load_String($response->getContent());
         } catch (\Exception $e) {
             return null;
         }
@@ -140,14 +139,14 @@ class ApiUtils
     }
 
     /**
-     * Formats Establishment (ES) information from an XML response into an array.
+     * Formats Establishment (ES) information from an XML response into an Array.
      *
      * This method takes an XML object as input and extracts relevant Establishment information from it.
-     * The extracted information is then organized into an associative array and returned.
+     * The extracted information is then organized into an associative Array and returned.
      *
      * @param SimpleXMLElement $xml The XML object containing Establishment information.
      *
-     * @return array An associative array containing formatted Establishment information.
+     * @return Array An associative Array containing formatted Establishment information.
      */
     public function formatESInfoXml($xml): ?array
     {
@@ -165,17 +164,22 @@ class ApiUtils
 
         if (isset($xml->finessDomaines->finessDomaine)) {
             foreach ($xml->finessDomaines->finessDomaine as $finessDomaine) {
-                if ($finessDomaine && array_key_exists((string) $finessDomaine->domaine->libelle, $domainesPerimetres)) {
-                    $habilitationsDomaines[] = [
-                        'date_debut' => isset($finessDomaine->dateDebut) ?
-                            (new DateTime((string) $finessDomaine->dateDebut))->format('d/m/Y') : null,
+                if ($finessDomaine && Array_key_exists((string) $finessDomaine->domaine->libelle, $domainesPerimetres)) {
 
-                        'date_fin' => isset($finessDomaine->dateFin) ?
-                            (new DateTime((string) $finessDomaine->dateFin))->format('d/m/Y') : null,
+                    // récupère tous les domaines présents qui ont une dateFin à null
+                    if (empty($finessDomaine->dateFin)) {
 
-                        'perimetre' => $domainesPerimetres[(string) $finessDomaine->domaine->libelle],
-                        'type_autorisation' => 'Domaine',
-                    ];
+                        $habilitationsDomaines[] = [
+                            'date_debut' => !empty($finessDomaine->dateDebut) ?
+                                (new DateTime((string) $finessDomaine->dateDebut))->format('d/m/Y') : null,
+
+                            'date_fin' => !empty($finessDomaine->dateFin) ?
+                                (new DateTime((string) $finessDomaine->dateFin))->format('d/m/Y') : null,
+
+                            'perimetre' => $domainesPerimetres[(string) $finessDomaine->domaine->libelle],
+                            'type_autorisation' => 'Domaine',
+                        ];
+                    }
                 }
             }
         }
@@ -184,12 +188,12 @@ class ApiUtils
     }
 
     /**
-     * Maps an array of user information to a UtilisateurDto object.
+     * Maps an Array of user information to a UtilisateurDto object.
      *
-     * This method takes an array of user information and maps it to a UtilisateurDto object, which is used
+     * This method takes an Array of user information and maps it to a UtilisateurDto object, which is used
      * to represent a user with structured data.
      *
-     * @param array $infosUtilisateur An array containing user information.
+     * @param Array $infosUtilisateur An Array containing user information.
      *
      * @return UtilisateurDto A UtilisateurDto object representing the user with mapped information.
      */
@@ -217,20 +221,24 @@ class ApiUtils
      * This method retrieves the authorizations and permissions associated with a particular organization
      * identified by its ID. It queries the database to find active organizations and their respective details.
      *
-     * @param string $idOrganisation The ID of the organization for which to retrieve authorizations and permissions.
+     * @param String $idOrganisation The ID of the organization for which to retrieve authorizations and permissions.
      *
-     * @return array An array containing the authorizations and permissions associated with the organization.
+     * @return Array An Array containing the authorizations and permissions associated with the organization.
      */
-    public function getHabilitationsOrganisations(String $idOrganisation): array
+    public function getHabilitationsOrganisations(String $idOrganisation): ?array
     {
-        $organisationAutorisationRepository = $this->entityManager->getRepository(OrganisationAutorisation::class);
-        $organisationAutorisation = $organisationAutorisationRepository->findActiveOrganisations($idOrganisation);
+        try {
+            $organisationAutorisationRepository = $this->entityManager->getRepository(OrganisationAutorisation::class);
+            $organisationAutorisation = $organisationAutorisationRepository->findActiveOrganisations($idOrganisation);
+        } catch (\Exception $e) {
+            return null;
+        }
 
         $habilitationsOrganisations = [];
         foreach ($organisationAutorisation as $org) {
             $habilitationsOrganisations[] = [
-                'date_debut' => $org->getDateDebut(),
-                'date_fin' => $org->getDateFin(),
+                'date_debut' => $org->getDateDebut() ? $org->getDateDebut()->format('d/m/Y') : null,
+                'date_fin' => $org->getDateFin() ? $org->getDateFin()->format('d/m/Y') : null,
                 'perimetre' => $org->getPerimetre(),
                 'type_autorisation' => $org->getTypeAutorisation(),
             ];
@@ -241,15 +249,15 @@ class ApiUtils
     /**
      * Retrieve an Organization Authorization by Perimeter.
      *
-     * This method searches for an Organization Authorization within a given array of Organization Authorizations
+     * This method searches for an Organization Authorization within a given Array of Organization Authorizations
      * based on the provided perimeter. It returns the matching Organization Authorization if found, or null if not found.
      *
-     * @param array $organisationAutorisations An array of Organization Authorizations to search within.
-     * @param string $perimetre The perimeter to match when searching for an Organization Authorization.
+     * @param Array $organisationAutorisations An Array of Organization Authorizations to search within.
+     * @param String $perimetre The perimeter to match when searching for an Organization Authorization.
      *
      * @return OrganisationAutorisation|null The matching Organization Authorization, or null if not found.
      */
-    public function getOrganisationAutorisationByPerimetre(array $organisationAutorisations, string $perimetre): ?OrganisationAutorisation
+    public function getOrganisationAutorisationByPerimetre(array $organisationAutorisations, String $perimetre): ?OrganisationAutorisation
     {
         foreach ($organisationAutorisations as $organisationAutorisation) {
             if ($organisationAutorisation->getPerimetre() === $perimetre) {
