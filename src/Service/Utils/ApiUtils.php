@@ -148,7 +148,7 @@ class ApiUtils
      *
      * @return Array An associative Array containing formatted Establishment information.
      */
-    public function formatESInfoXml($xml): ?array
+    public function formatESInfoXml($xml): array
     {
         $this->logger->debug('Format ESInfo xml');
 
@@ -168,7 +168,6 @@ class ApiUtils
 
                     // récupère tous les domaines présents qui ont une dateFin à null
                     if (empty($finessDomaine->dateFin)) {
-
                         $habilitationsDomaines[] = [
                             'date_debut' => !empty($finessDomaine->dateDebut) ?
                                 (new DateTime((string) $finessDomaine->dateDebut))->format('d/m/Y') : null,
@@ -223,7 +222,7 @@ class ApiUtils
      *
      * @param String $idOrganisation The ID of the organization for which to retrieve authorizations and permissions.
      *
-     * @return Array An Array containing the authorizations and permissions associated with the organization.
+     * @return Array|null An Array containing the authorizations and permissions associated with the organization.
      */
     public function getHabilitationsOrganisations(String $idOrganisation): ?array
     {
