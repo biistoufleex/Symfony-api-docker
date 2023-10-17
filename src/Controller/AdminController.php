@@ -6,17 +6,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Http\Responses\Status;
-use App\Service\ApiService;
+use App\Service\UtilisateurService;
 
 #[Route('/admin', name: 'app_admin')]
 class AdminController extends AbstractController
 {
 
-    private ApiService $apiService;
+    private UtilisateurService $utilisateurService;
 
-    public function __construct(ApiService $apiService)
+    public function __construct(UtilisateurService $utilisateurService)
     {
-        $this->apiService = $apiService;
+        $this->utilisateurService = $utilisateurService;
     }
     #[Route('/habilitation/{identifiant_plage_utilisateur}/{token}', name: 'app_habilitation', methods: ['GET'])]
     public function index(String $identifiant_plage_utilisateur, String $token): JsonResponse
@@ -33,7 +33,7 @@ class AdminController extends AbstractController
     public function getUserInfo(String $id): JsonResponse
     {
         try {
-            return $this->json($this->apiService->getUserInfo($id));
+            return $this->json($this->utilisateurService->getUserInfo($id));
         } catch (\Exception $e) {
             return $this->json([
                 'retour' => Status::error($e->getMessage())->toArray()
