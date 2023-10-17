@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\constants\MessageConstants;
 use App\Controller\Http\Responses\HabilitationReponse;
 use App\Controller\Http\Responses\Status;
 use App\Entity\Utilisateur;
@@ -73,8 +74,8 @@ class UtilisateurService
         $this->data = $this->entityManager->getRepository(Utilisateur::class)->getDevelPlageXml($idUser);
 
         if ($this->data === null) {
-            $this->logger->error('Erreur lors de la récupération des informations de l\'utilisateur', ['idUser' => $idUser]);
-            throw new \Exception('Erreur lors de la récupération des informations de l\'utilisateur');
+            $this->logger->error(MessageConstants::ERREUR_RECUPERATION_INFO_USER, ['idUser' => $idUser]);
+            throw new \Exception(MessageConstants::ERREUR_RECUPERATION_INFO_USER);
         } else if ($this->data->exception) {
             $this->logger->error($this->data->exception->libelle, ['idUser' => $idUser]);
             throw new \Exception($this->data->exception->libelle);

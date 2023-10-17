@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ESInfo>
+  <id>000000001</id>
+  <libelle>HOPITAL DE TEST</libelle>
+  <finess>000000001</finess>
+  <ville>Testville</ville>
+  <region>
+    <id>00</id>
+    <libelle>Testland</libelle>
+  </region>
+  <structures>
+    <!-- Ajoutez d'autres éléments structures si nécessaire -->
+  </structures>
+  <finessDomaines>
+    <finessDomaine>
+      <finess>000000012</finess>
+      <domaine>
+        <id>4</id>
+        <libelle>TDBEMS</libelle>
+      </domaine>
+      <dateDebut>2010-01-02T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </finessDomaine>
+    <finessDomaine>
+      <finess>000000112</finess>
+      <domaine>
+        <id>4</id>
+        <libelle>BILANSOCIAL</libelle>
+      </domaine>
+      <dateDebut>2022-01-02T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </finessDomaine>
+    <finessDomaine>
+      <finess>000000001</finess>
+      <domaine>
+        <id>14</id>
+        <libelle>ANCRE</libelle>
+      </domaine>
+      <dateDebut>2011-01-01T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </finessDomaine>
+    <!-- Ajoutez d'autres éléments finessDomaine si nécessaire -->
+  </finessDomaines>
+  <types>
+    <type>
+      <id>16</id>
+      <libelle>Public NON rattaché à un CH</libelle>
+      <dateDebut>2018-10-10T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </type>
+    <type>
+      <id>4</id>
+      <libelle>CLCC</libelle>
+      <dateDebut></dateDebut>
+      <dateFin></dateFin>
+    </type>
+    <!-- Ajoutez d'autres éléments type si nécessaire -->
+  </types>
+  <statuts>
+    <statut>
+      <id>12</id>
+      <libelle>Centre de santé</libelle>
+      <dateDebut>2018-10-27T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </statut>
+    <statut>
+      <id>1</id>
+      <libelle>ex-DGF</libelle>
+      <dateDebut>2004-01-01T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </statut>
+    <!-- Ajoutez d'autres éléments statut si nécessaire -->
+  </statuts>
+  <champs>
+    <champ>
+      <id>3</id>
+      <libelle>PSY</libelle>
+      <domaine>
+        <id>1</id>
+        <libelle>QDWQDQ</libelle>
+      </domaine>
+      <dateDebut>2004-01-01T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </champ>
+    <champ>
+      <id>5</id>
+      <libelle>HAD</libelle>
+      <domaine>
+        <id>1</id>
+        <libelle>Médico-Social</libelle>
+      </domaine>
+      <dateDebut>2004-01-01T00:00:00.000Z</dateDebut>
+      <dateFin></dateFin>
+    </champ>
+    <!-- Ajoutez d'autres éléments champ si nécessaire -->
+  </champs>
+</ESInfo>

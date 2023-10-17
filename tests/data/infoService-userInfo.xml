@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<utilisateur>
+  <id>12345</id>
+  <nom>Doe</nom>
+  <prenom>John</prenom>
+  <email>john.doe@example.com</email>
+  <emailValide>oui</emailValide>
+  <compteActif>oui</compteActif>
+  <adresse>
+    <rue>123 Main Street</rue>
+    <ville>Anytown</ville>
+    <codePostal>12345</codePostal>
+  </adresse>
+  <telephone>555-123-4567</telephone>
+  <niveau>
+    <id>2</id>
+    <libelle>Utilisateur</libelle>
+  </niveau>
+  <organisation>
+    <id>XYZCorp</id>
+    <libelle>XYZ Corporation</libelle>
+    <type>
+      <code>ENTREPRISE</code>
+      <libelle>Entreprise</libelle>
+    </type>
+  </organisation>
+  <region>
+    <id>7</id>
+    <libelle>Region Example</libelle>
+  </region>
+  <ipe>770700201</ipe>
+  <structures>
+    <structure>Structure Example 1</structure>
+    <structure>Structure Example 2</structure>
+  </structures>
+  <idProfilActif>98765</idProfilActif>
+  <profils>
+    <profil>
+      <id>98765</id>
+      <libelle>Profil Example</libelle>
+      <codeEntite>770700201</codeEntite>
+    </profil>
+  </profils>
+  <dateCreation>2023-10-17T14:30:00.000+02:00</dateCreation>
+  <dateDernierAcces>2023-10-17T14:30:00.000+02:00</dateDernierAcces>
+  <drs>
+    <dr>
+      <domaine>
+        <id>0</id>
+        <libelle>Administration Plage</libelle>
+      </domaine>
+      <roles>
+        <role>
+          <id>0</id>
+          <libelle>Administrateur</libelle>
+        </role>
+        <role>
+          <id>15</id>
+          <libelle>Gestionnaire FINESS</libelle>
+        </role>
+        <role>
+          <id>27</id>
+          <libelle>Super Utilisateur</libelle>
+        </role>
+      </roles>
+    </dr>
+    <dr>
+      <domaine>
+        <id>1</id>
+        <libelle>PMSI</libelle>
+      </domaine>
+      <roles>
+        <role>
+          <id>0</id>
+          <libelle>Administrateur</libelle>
+        </role>
+      </roles>
+    </dr>
+    <dr>
+      <domaine>
+        <id>10</id>
+        <libelle>RTC</libelle>
+      </domaine>
+      <roles>
+        <role>
+          <id>0</id>
+          <libelle>Administrateur</libelle>
+        </role>
+      </roles>
+    </dr>
+  </drs>
+  <dss>
+    <ds>
+      <domaine>
+        <id>1</id>
+        <libelle>PMSI</libelle>
+      </domaine>
+      <statuts>
+        <statut>
+          <id>1</id>
+          <libelle>ex-DGF</libelle>
+        </statut>
+        <statut>
+          <id>2</id>
+          <libelle>ex-OQN</libelle>
+        </statut>
+      </statuts>
+    </ds>
+  </dss>
+  <dcs>
+    <dc>
+      <domaine>
+        <id>1</id>
+        <libelle>PMSI</libelle>
+      </domaine>
+      <champs>
+        <champ>
+          <id>1</id>
+          <libelle>MCO</libelle>
+        </champ>
+        <champ>
+          <id>2</id>
+          <libelle>SSR</libelle>
+        </champ>
+        <champ>
+          <id>3</id>
+          <libelle>PSY</libelle>
+        </champ>
+        <champ>
+          <id>5</id>
+          <libelle>HAD</libelle>
+        </champ>
+      </champs>
+    </dc>
+  </dcs>
+</utilisateur>
