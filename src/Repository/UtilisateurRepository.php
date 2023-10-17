@@ -22,12 +22,14 @@ class UtilisateurRepository extends ServiceEntityRepository
 {
     private HttpClientInterface $client;
     private LoggerInterface $logger;
+    private String $getUserInfoUrl;
 
-    public function __construct(ManagerRegistry $registry, HttpClientInterface $client, LoggerInterface $logger)
+    public function __construct(ManagerRegistry $registry, HttpClientInterface $client, LoggerInterface $logger, String $getUserInfoUrl)
     {
         parent::__construct($registry, Utilisateur::class);
         $this->client = $client;
         $this->logger = $logger;
+        $this->getUserInfoUrl = $getUserInfoUrl;
     }
 
     /**
@@ -46,11 +48,11 @@ class UtilisateurRepository extends ServiceEntityRepository
     public function getDevelPlageXml(String $idUser): ?SimpleXMLElement
     {
         $this->logger->debug('Get devel plage xml');
-
+    
         try {
             $response = $this->client->request(
                 'GET',
-                'https://devel-plage-infoservice.atih.sante.fr/plage-infoservice/getUserInfo.do',
+                $this->getUserInfoUrl,
                 [
                     'query' => [
                         'idUser' => $idUser,

@@ -10,11 +10,13 @@ class EtablissementRepository
 {
     private HttpClientInterface $client;
     private LoggerInterface $logger;
+    private String $getEtablissementInfoUrl;
 
-    public function __construct(HttpClientInterface $client, LoggerInterface $logger)
+    public function __construct(HttpClientInterface $client, LoggerInterface $logger, String $getEtablissementInfoUrl)
     {
         $this->client = $client;
         $this->logger = $logger;
+        $this->getEtablissementInfoUrl = $getEtablissementInfoUrl;
     }
 
     /**
@@ -37,7 +39,7 @@ class EtablissementRepository
         try {
             $response = $this->client->request(
                 'GET',
-                'https://devel-plage-infoservice.atih.sante.fr/plage-infoservice/getESInfo.do',
+                $this->getEtablissementInfoUrl,
                 [
                     'query' => [
                         'ipe' => $epi,
