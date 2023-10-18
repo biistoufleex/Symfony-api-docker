@@ -110,10 +110,11 @@ class UtilisateurService
     {
         $plageXml = $this->entityManager->getRepository(Utilisateur::class)->getDevelPlageXml($idUser);
 
-        if ($plageXml === null) {
+        if (!$plageXml) {
             $this->logger->error(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER, ['idUser' => $idUser]);
             throw new \Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER);
-        } else if ($plageXml->exception) {
+        }
+        if ($plageXml->exception) {
             $this->logger->error($plageXml->exception->libelle, ['idUser' => $idUser]);
             throw new \Exception($plageXml->exception->libelle);
         }
