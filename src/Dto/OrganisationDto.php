@@ -15,12 +15,4 @@ class OrganisationDto
         $this->id = $id;
         $this->libelle = $libelle;
     }
-
-    public static function fromEntity(Organisation $organisation): self
-    {
-        return new self(
-            $organisation->getId(),
-            $organisation->getLibelle()
-        );
-    }
 }

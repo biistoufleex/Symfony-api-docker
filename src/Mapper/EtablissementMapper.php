@@ -2,8 +2,10 @@
 
 namespace App\Mapper;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use DateTime;
+use SimpleXMLElement;
 
 class EtablissementMapper
 {
@@ -23,9 +25,10 @@ class EtablissementMapper
      *
      * @param SimpleXMLElement $xml The XML object containing Establishment information.
      *
-     * @return Array An associative Array containing formatted Establishment information.
+     * @return array An associative Array containing formatted Establishment information.
+     * @throws Exception
      */
-    public function formatESInfoXml($xml): array
+    public function formatESInfoXml(SimpleXMLElement $xml): array
     {
         $this->logger->debug('Format ESInfo xml');
 
@@ -48,10 +51,7 @@ class EtablissementMapper
                         $habilitationsDomaines[] = [
                             'date_debut' => !empty($finessDomaine->dateDebut) ?
                                 (new DateTime((string) $finessDomaine->dateDebut))->format('d/m/Y') : null,
-
-                            'date_fin' => !empty($finessDomaine->dateFin) ?
-                                (new DateTime((string) $finessDomaine->dateFin))->format('d/m/Y') : null,
-
+                            'date_fin' => null,
                             'perimetre' => $domainesPerimetres[(string) $finessDomaine->domaine->libelle],
                             'type_autorisation' => 'Domaine',
                         ];

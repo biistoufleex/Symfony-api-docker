@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\OrganisationAutorisation;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,7 +24,7 @@ class OrganisationAutorisationRepository extends ServiceEntityRepository
 
     public function findActiveOrganisations($identifiant)
     {
-        $currentDate = new \DateTime(); // Get the current date and time
+        $currentDate = new DateTime(); // Get the current date and time
 
         return $this->createQueryBuilder('oa')
             ->andWhere('oa.identifiantOrganisationPlage = :identifiant')

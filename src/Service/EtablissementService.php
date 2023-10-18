@@ -4,8 +4,10 @@ namespace App\Service;
 
 use App\constants\MessageConstants;
 use App\Repository\EtablissementRepository;
+use Exception;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class EtablissementService
 {
@@ -32,18 +34,19 @@ class EtablissementService
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the FINESS domain information in XML format
      *                            or null if there's an issue with the InfoService API communication.
      *
-     * @throws \Exception If there is a problem with the InfoService API communication, an exception is thrown,
+     * @throws Exception If there is a problem with the InfoService API communication, an exception is thrown,
+     * @throws TransportExceptionInterface
      *                    and the issue is logged with details.
      */
     public function getFinessDomainXml(String $ipe): ?SimpleXMLElement
     {
         $finessDomainsXml = $this->etablissementRepository->getESInfoXml($ipe);
         if ($finessDomainsXml === null) {
-            throw new \Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_ETABLISSEMENT);
             $this->logger->error(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_ETABLISSEMENT, ['ipe' => $ipe]);
+            throw new Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_ETABLISSEMENT);
         } else if ($finessDomainsXml->exception) {
             $this->logger->error($finessDomainsXml->exception->libelle, ['ipe' => $ipe]);
-            throw new \Exception($finessDomainsXml->exception->libelle);
+            throw new Exception($finessDomainsXml->exception->libelle);
         }
         return $finessDomainsXml;
     }

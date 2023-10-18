@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\constants\MessageConstants;
 use App\Entity\Utilisateur;
+use Exception;
 use SimpleXMLElement;
 use App\Controller\Http\Responses\HabilitationReponse;
 use App\Controller\Http\Responses\Status;
@@ -50,6 +51,7 @@ class UtilisateurService
      * @param string $idUser The ID of the user for which to retrieve information and authorizations.
      *
      * @return array An array containing user information and authorizations.
+     * @throws Exception
      */
     public function getUserInfo(String $idUser): array
     {
@@ -58,7 +60,6 @@ class UtilisateurService
         $response = new HabilitationReponse();
         $response->setHabilitationsDomaines([]);
         $response->setHabilitationsScansante([]);
-        $ipe = null;
 
         # 1 - Récupération des informations de l’utilisateur
         $develXml = $this->getDevelXml($idUser);
@@ -103,7 +104,7 @@ class UtilisateurService
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the user information in XML format
      *                            or null if there is an issue with the InfoService API communication.
      *
-     * @throws \Exception If there is a problem with the InfoService API communication or if the API returns an exception,
+     * @throws Exception If there is a problem with the InfoService API communication or if the API returns an exception,
      *                    an exception is thrown, and the issue is logged with details.
      */
     public function getDevelXml(String $idUser): ?SimpleXMLElement
@@ -112,11 +113,11 @@ class UtilisateurService
 
         if (!$plageXml) {
             $this->logger->error(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER, ['idUser' => $idUser]);
-            throw new \Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER);
+            throw new Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER);
         }
         if ($plageXml->exception) {
             $this->logger->error($plageXml->exception->libelle, ['idUser' => $idUser]);
-            throw new \Exception($plageXml->exception->libelle);
+            throw new Exception($plageXml->exception->libelle);
         }
 
         return $plageXml;

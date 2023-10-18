@@ -15,12 +15,4 @@ class NiveauDto
         $this->id = $id;
         $this->libelle = $libelle;
     }
-
-    public static function fromEntity(Niveau $niveau): self
-    {
-        return new self(
-            $niveau->getId(),
-            $niveau->getLibelle()
-        );
-    }
 }

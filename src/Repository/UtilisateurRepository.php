@@ -5,8 +5,10 @@ namespace App\Repository;
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -16,7 +18,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * @method Utilisateur|null findOneBy(array $criteria, array $orderBy = null)
  * @method Utilisateur[]    findAll()
  * @method Utilisateur[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- * @method SimpleXMLElement|null getDevelPlageXml(String $idUser)
  */
 class UtilisateurRepository extends ServiceEntityRepository
 {
@@ -43,7 +44,8 @@ class UtilisateurRepository extends ServiceEntityRepository
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the user information in XML format
      *                            or null if an error occurs during the request.
      *
-     * @throws \Exception If an exception occurs while making the API request, it is caught and null is returned.
+     * @throws Exception If an exception occurs while making the API request, it is caught and null is returned.
+     * @throws TransportExceptionInterface
      */
     public function getDevelPlageXml(String $idUser): ?SimpleXMLElement
     {
@@ -62,7 +64,7 @@ class UtilisateurRepository extends ServiceEntityRepository
             );
 
             $xml = simplexml_load_string($response->getContent());
-        } catch (\Exception $e) {
+        } catch (Exception) {
             return null;
         }
         return $xml;

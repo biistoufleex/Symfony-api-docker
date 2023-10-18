@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class EtablissementRepository
@@ -30,7 +32,8 @@ class EtablissementRepository
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the Establishment information in XML format
      *                            or null if an error occurs during the request.
      *
-     * @throws \Exception If an exception occurs while making the API request, it is caught, and null is returned.
+     * @throws Exception If an exception occurs while making the API request, it is caught, and null is returned.
+     * @throws TransportExceptionInterface
      */
     public function getESInfoXml(String $epi): ?SimpleXMLElement
     {
@@ -49,7 +52,7 @@ class EtablissementRepository
             );
 
             $xml = simplexml_load_String($response->getContent());
-        } catch (\Exception $e) {
+        } catch (Exception) {
             return null;
         }
 

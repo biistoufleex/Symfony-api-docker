@@ -6,6 +6,7 @@ use App\Dto\UtilisateurDto;
 use Psr\Log\LoggerInterface;
 use App\Dto\OrganisationDto;
 use App\Dto\NiveauDto;
+use SimpleXMLElement;
 
 class UtilisateurMapper
 {
@@ -23,7 +24,7 @@ class UtilisateurMapper
      * This method takes an Array of user information and maps it to a UtilisateurDto object, which is used
      * to represent a user with structured data.
      *
-     * @param Array $infosUtilisateur An Array containing user information.
+     * @param array $infosUtilisateur An Array containing user information.
      *
      * @return UtilisateurDto A UtilisateurDto object representing the user with mapped information.
      */
@@ -31,7 +32,7 @@ class UtilisateurMapper
     {
         $this->logger->debug('map to UtilisateurDto');
 
-        $utilisateurDto = new UtilisateurDto(
+        return new UtilisateurDto(
             $infosUtilisateur['id'],
             $infosUtilisateur['nom'],
             $infosUtilisateur['prenom'],
@@ -40,8 +41,6 @@ class UtilisateurMapper
             new OrganisationDto($infosUtilisateur['organisation']['id'], $infosUtilisateur['organisation']['libelle']),
             $infosUtilisateur['roles_scansante'],
         );
-
-        return $utilisateurDto;
     }
 
     /**
@@ -52,9 +51,9 @@ class UtilisateurMapper
      *
      * @param SimpleXMLElement $xml The XML object containing user information.
      *
-     * @return Array An associative Array containing formatted user information.
+     * @return array An associative Array containing formatted user information.
      */
-    public function formatInfoUserXml($xml): array
+    public function formatInfoUserXml(SimpleXMLElement $xml): array
     {
         $this->logger->debug('Format user xml');
 
@@ -68,7 +67,7 @@ class UtilisateurMapper
             }
         }
 
-        $infosUtilisateur = [
+        return [
             'id' => isset($xml->id) ? (int) $xml->id : null,
             'nom' => isset($xml->nom) ? (string) $xml->nom : null,
             'prenom' => isset($xml->prenom) ? (string)  $xml->prenom : null,
@@ -83,7 +82,5 @@ class UtilisateurMapper
             ],
             'roles_scansante' => $roles_scansante
         ];
-
-        return $infosUtilisateur;
     }
 }
