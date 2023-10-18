@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.getUserInfoUrl: '%env(GET_USER_INFO_URL)%'
+    app.getEtablissementInfoUrl: '%env(GET_ETABLISSEMENT_INFO_URL)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +24,13 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Repository\UtilisateurRepository:
+        arguments:
+            $getUserInfoUrl: '%app.getUserInfoUrl%'
+        public: false
+
+    App\Repository\EtablissementRepository:
+        arguments:
+            $getEtablissementInfoUrl: '%app.getEtablissementInfoUrl%'
+        public: false
