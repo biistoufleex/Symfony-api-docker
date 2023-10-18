@@ -9,8 +9,6 @@ class EtablissementRepositoryTest extends KernelTestCase
 {
     private EtablissementRepository $etablissementRepository;
 
-    private const BAD_EPI = '123';
-
     protected function setUp(): void
     {
         self::bootKernel();

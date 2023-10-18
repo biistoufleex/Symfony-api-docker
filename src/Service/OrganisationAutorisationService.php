@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\constants\MessageConstants;
 use App\Entity\OrganisationAutorisation;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -18,16 +19,19 @@ class OrganisationAutorisationService
     }
 
     /**
-     * Get the authorizations and permissions for a specific organization.
+     * Get active authorizations and permissions for a specific organization.
      *
-     * This method retrieves the authorizations and permissions associated with a particular organization
+     * This method retrieves the active authorizations and permissions associated with a particular organization
      * identified by its ID. It queries the database to find active organizations and their respective details.
      *
-     * @param String $idOrganisation The ID of the organization for which to retrieve authorizations and permissions.
+     * @param string $idOrganisation The ID of the organization for which to retrieve active authorizations and permissions.
      *
-     * @return Array|null An Array containing the authorizations and permissions associated with the organization.
-     */
-    public function getHabilitationsOrganisations(String $idOrganisation): ?array
+     * @return array An array containing the active organization authorizations and permissions.
+     *
+     * @throws \Exception If there is an issue with retrieving the organization authorizations, an exception is thrown,
+     *                    and the issue is logged with details.
+    */
+    public function getOrganisationAutorisations(String $idOrganisation): ?array
     {
         $this->logger->debug('Get habilitations organisations', ['idOrganisation' => $idOrganisation]);
 
@@ -35,10 +39,27 @@ class OrganisationAutorisationService
             $organisationAutorisationRepository = $this->entityManager->getRepository(OrganisationAutorisation::class);
             $organisationAutorisation = $organisationAutorisationRepository->findActiveOrganisations($idOrganisation);
         } catch (\Exception $e) {
-            return null;
+            $this->logger->error($e->getMessage(), ['idOrganisation' => $idOrganisation]);
+            throw new \Exception(MessageConstants::PROBLEME_RECUP_OGRANISATION_AUTORISATION);
         }
+        return $organisationAutorisation;
+    }
 
+    /**
+     * Parse an array of Organization Authorizations into a structured array.
+     *
+     * This method takes an array of Organization Authorizations and converts them into a structured array
+     * with specific formatting for each element. It provides information about the authorizations, including
+     * start and end dates, perimeter, and type of authorization.
+     *
+     * @param OrganisationAutorisation[] $organisationAutorisation An array of Organization Authorizations to parse.
+     *
+     * @return array An array containing the parsed and formatted Organization Authorizations.
+    */
+    public function parseOrganisationAutorisation(array $organisationAutorisation): array
+    {
         $habilitationsOrganisations = [];
+
         foreach ($organisationAutorisation as $org) {
             $habilitationsOrganisations[] = [
                 'date_debut' => $org->getDateDebut() ? $org->getDateDebut()->format('d/m/Y') : null,
