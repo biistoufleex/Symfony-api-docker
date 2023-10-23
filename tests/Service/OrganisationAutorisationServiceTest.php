@@ -4,6 +4,7 @@ namespace App\Tests\Service;
 
 use App\Service\OrganisationAutorisationService;
 use App\Tests\data\fakeObject\FakeHabilitationsOrganisations;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class OrganisationAutorisationServiceTest extends KernelTestCase
@@ -14,20 +15,20 @@ class OrganisationAutorisationServiceTest extends KernelTestCase
 
         $organisationAutorisation = [
             new FakeHabilitationsOrganisations(
-                new \DateTime('2023-10-18'),
-                new \DateTime('2023-10-28'),
+                new DateTime('2023-10-18'),
+                new DateTime('2023-10-28'),
                 'etablissement',
                 'ATIH'
             ),
             new FakeHabilitationsOrganisations(
-                new \DateTime('2023-10-18'),
-                new \DateTime('2023-10-28'),
+                new DateTime('2023-10-18'),
+                new DateTime('2023-10-28'),
                 'etablissement',
                 'ADMIN'
             ),
             new FakeHabilitationsOrganisations(
-                new \DateTime('2023-10-18'),
-                new \DateTime('2023-10-28'),
+                new DateTime('2023-10-18'),
+                new DateTime('2023-10-28'),
                 'etablissement',
                 'OTHER'
             ),

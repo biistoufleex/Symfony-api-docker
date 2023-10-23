@@ -3,6 +3,7 @@
 namespace App\Tests\Service;
 
 use App\Service\UtilisateurService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UtilisateurServiceTest extends KernelTestCase
@@ -23,7 +24,7 @@ class UtilisateurServiceTest extends KernelTestCase
 
         try {
             $plageXml = $utilisateurService->getDevelXml('123456789');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals('pas de compte trouvé', $e->getMessage());
         }
     }

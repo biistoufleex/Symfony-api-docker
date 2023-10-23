@@ -3,6 +3,7 @@
 namespace App\Tests\Repository;
 
 use App\Repository\EtablissementRepository;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class EtablissementRepositoryTest extends KernelTestCase
@@ -22,7 +23,7 @@ class EtablissementRepositoryTest extends KernelTestCase
         $xml = $this->etablissementRepository->getESInfoXml($idUser);
 
         $this->assertNotNull($xml);
-        $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
+        $this->assertInstanceOf(SimpleXMLElement::class, $xml);
     }
 
     public function testGetDevelPlageXmlForBadIpeFormat()
@@ -31,7 +32,7 @@ class EtablissementRepositoryTest extends KernelTestCase
         $xml = $this->etablissementRepository->getESInfoXml($epi);
     
         $this->assertNotNull($xml);
-        $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
+        $this->assertInstanceOf(SimpleXMLElement::class, $xml);
         $this->assertNotNull($xml->exception);
     }
 }
