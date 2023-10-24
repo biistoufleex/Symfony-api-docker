@@ -16,7 +16,7 @@ class EtablissementRepositoryTest extends KernelTestCase
         $this->etablissementRepository = self::getContainer()->get(etablissementRepository::class);
     }
 
-    public function testGetDevelPlageXml()
+    public function testGetDevelPlageXml(): void
     {
         $idUser = getenv('ID_USER');
 
@@ -26,7 +26,7 @@ class EtablissementRepositoryTest extends KernelTestCase
         $this->assertInstanceOf(SimpleXMLElement::class, $xml);
     }
 
-    public function testGetDevelPlageXmlForBadIpeFormat()
+    public function testGetDevelPlageXmlForBadIpeFormat(): void
     {
         $epi = '123';
         $xml = $this->etablissementRepository->getESInfoXml($epi);

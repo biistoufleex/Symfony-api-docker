@@ -51,7 +51,7 @@ class UtilisateurService
      *
      * @param string $idUser The ID of the user for which to retrieve information and authorizations.
      *
-     * @return array An array containing user information and authorizations.
+     * @return array<string, mixed> An array containing user information and authorizations.
      * @throws Exception|TransportExceptionInterface
      */
     public function getUserInfo(string $idUser): array

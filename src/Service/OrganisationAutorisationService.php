@@ -27,7 +27,7 @@ class OrganisationAutorisationService
      *
      * @param string $idOrganisation The ID of the organization for which to retrieve active authorizations and permissions.
      *
-     * @return array|null An array containing the active organization authorizations and permissions.
+     * @return array<int, mixed>|null An array containing the active organization authorizations and permissions.
      *
      * @throws Exception If there is an issue with retrieving the organization authorizations, an exception is thrown,
      *                    and the issue is logged with details.
@@ -55,7 +55,7 @@ class OrganisationAutorisationService
      *
      * @param OrganisationAutorisation[] $organisationAutorisation An array of Organization Authorizations to parse.
      *
-     * @return array An array containing the parsed and formatted Organization Authorizations.
+     * @return array<int, mixed> An array containing the parsed and formatted Organization Authorizations.
     */
     public function parseOrganisationAutorisation(array $organisationAutorisation): array
     {

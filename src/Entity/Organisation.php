@@ -20,6 +20,9 @@ class Organisation
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    /**
+     * @var Collection<int, Utilisateur>
+     */
     #[ORM\OneToMany(mappedBy: 'Organisation', targetEntity: Utilisateur::class)]
     private Collection $utilisateurs;
 

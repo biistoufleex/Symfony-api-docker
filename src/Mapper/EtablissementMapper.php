@@ -25,7 +25,7 @@ class EtablissementMapper
      *
      * @param SimpleXMLElement $xml The XML object containing Establishment information.
      *
-     * @return array An associative Array containing formatted Establishment information.
+     * @return array<int, mixed> An associative Array containing formatted Establishment information.
      * @throws Exception
      */
     public function formatESInfoXml(SimpleXMLElement $xml): array

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\This;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ApiResource]
@@ -30,7 +31,10 @@ class Utilisateur
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'array')]
+    /**
+     * @var array<string, mixed>
+     */
+    #[ORM\Column(type: 'Json_array')]
     private array $rolesScansante = [];
 
     public function setId(int $id): static
@@ -105,11 +109,18 @@ class Utilisateur
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getRolesScansante(): array
     {
         return $this->rolesScansante;
     }
 
+    /**
+     * @param array<string, mixed> $rolesScansante
+     * @return $this
+     */
     public function setRolesScansante(array $rolesScansante): static
     {
         $this->rolesScansante = $rolesScansante;

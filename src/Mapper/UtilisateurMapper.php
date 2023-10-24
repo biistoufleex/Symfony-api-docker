@@ -24,7 +24,7 @@ class UtilisateurMapper
      * This method takes an Array of user information and maps it to a UtilisateurDto object, which is used
      * to represent a user with structured data.
      *
-     * @param array $infosUtilisateur An Array containing user information.
+     * @param array<string, mixed> $infosUtilisateur An Array containing user information.
      *
      * @return UtilisateurDto A UtilisateurDto object representing the user with mapped information.
      */
@@ -51,7 +51,7 @@ class UtilisateurMapper
      *
      * @param SimpleXMLElement $xml The XML object containing user information.
      *
-     * @return array An associative Array containing formatted user information.
+     * @return array<string, mixed> An associative Array containing formatted user information.
      */
     public function formatInfoUserXml(SimpleXMLElement $xml): array
     {

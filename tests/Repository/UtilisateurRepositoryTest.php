@@ -16,7 +16,7 @@ class UtilisateurRepositoryTest extends KernelTestCase
         $this->utilisateurRepository = self::getContainer()->get(UtilisateurRepository::class);
     }
 
-    public function testGetDevelPlageXml()
+    public function testGetDevelPlageXml(): void
     {
         $idUser = getenv('ID_USER');
 
@@ -26,7 +26,7 @@ class UtilisateurRepositoryTest extends KernelTestCase
         $this->assertInstanceOf(SimpleXMLElement::class, $xml);
     }
 
-    public function testGetDevelPlageXmlForNonExistentUser()
+    public function testGetDevelPlageXmlForNonExistentUser(): void
     {
         $idUser = 'USER_DOES_NOT_EXIST';
 

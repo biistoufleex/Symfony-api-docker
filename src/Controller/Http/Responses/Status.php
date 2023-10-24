@@ -23,6 +23,9 @@ class Status
         return new Status('KO', $message);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return [
