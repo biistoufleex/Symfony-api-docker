@@ -44,7 +44,7 @@ class EtablissementService
         if ($finessDomainsXml === null) {
             $this->logger->error(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_ETABLISSEMENT, ['ipe' => $ipe]);
             throw new Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_ETABLISSEMENT);
-        } else if ($finessDomainsXml->exception) {
+        } elseif ($finessDomainsXml->exception) {
             $this->logger->error($finessDomainsXml->exception->libelle, ['ipe' => $ipe]);
             throw new Exception($finessDomainsXml->exception->libelle);
         }

@@ -31,8 +31,8 @@ class UtilisateurService
         OrganisationAutorisationService $organisationAutorisationService,
         EtablissementService            $etablissementService,
         RoleApplicationService    $roleApplicationService,
-        UtilisateurMapper               $utilisateurMapper)
-    {
+        UtilisateurMapper               $utilisateurMapper
+    ) {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->etablissementMapper = $etablissementMapper;
@@ -71,8 +71,10 @@ class UtilisateurService
         $response->setInfoUtilisateur($UtilisateurDto);
 
         # 2 - Récupération des habilitations des organisations
-        $organisationAutorisations = $this->organisationAutorisationService->getOrganisationAutorisations($develXml->organisation->id);
-        $habilitationsOrganisations = $this->organisationAutorisationService->parseOrganisationAutorisation($organisationAutorisations);
+        $organisationAutorisations =
+            $this->organisationAutorisationService->getOrganisationAutorisations($develXml->organisation->id);
+        $habilitationsOrganisations =
+            $this->organisationAutorisationService->parseOrganisationAutorisation($organisationAutorisations);
 
         $response->setHabilitationsOrganisation($habilitationsOrganisations);
 
@@ -108,8 +110,9 @@ class UtilisateurService
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the user information in XML format
      *                            or null if there is an issue with the InfoService API communication.
      *
-     * @throws Exception If there is a problem with the InfoService API communication or if the API returns an exception,
-     *                    an exception is thrown, and the issue is logged with details.
+     * @throws Exception If there is a problem with the InfoService API communication or
+     *                   if the API returns an exception,
+     *                   an exception is thrown, and the issue is logged with details.
      */
     public function getDevelXml(string $idUser): ?SimpleXMLElement
     {

@@ -25,7 +25,8 @@ class EtablissementRepository
      * Retrieves Establishment (ES) information from the Devel Plage InfoService API in XML format.
      *
      * This method sends a GET request to the Devel Plage InfoService API to fetch Establishment information
-     * based on the provided Establishment ID (EPI). The Establishment information is returned as an XML document in the response.
+     * based on the provided Establishment ID (EPI).
+     * The Establishment information is returned as an XML document in the response.
      *
      * @param String $epi The Establishment ID (EPI) for which to fetch information.
      *

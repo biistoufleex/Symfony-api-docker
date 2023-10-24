@@ -44,8 +44,10 @@ class EtablissementMapper
 
         if (isset($xml->finessDomaines->finessDomaine)) {
             foreach ($xml->finessDomaines->finessDomaine as $finessDomaine) {
-                if ($finessDomaine && Array_key_exists((string) $finessDomaine->domaine->libelle, $domainesPerimetres)) {
-
+                if ($finessDomaine && Array_key_exists(
+                    (string) $finessDomaine->domaine->libelle,
+                    $domainesPerimetres
+                )) {
                     // récupère tous les domaines présents qui ont une dateFin à null
                     if (empty($finessDomaine->dateFin)) {
                         $habilitationsDomaines[] = [

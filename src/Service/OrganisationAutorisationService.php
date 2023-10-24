@@ -25,7 +25,8 @@ class OrganisationAutorisationService
      * This method retrieves the active authorizations and permissions associated with a particular organization
      * identified by its ID. It queries the database to find active organizations and their respective details.
      *
-     * @param string $idOrganisation The ID of the organization for which to retrieve active authorizations and permissions.
+     * @param string $idOrganisation The ID of the organization for which to retrieve
+     *                               active authorizations and permissions.
      *
      * @return array<int, mixed>|null An array containing the active organization authorizations and permissions.
      *

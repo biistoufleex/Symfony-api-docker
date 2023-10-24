@@ -25,8 +25,12 @@ class UtilisateurRepository extends ServiceEntityRepository
     private LoggerInterface $logger;
     private String $getUserInfoUrl;
 
-    public function __construct(ManagerRegistry $registry, HttpClientInterface $client, LoggerInterface $logger, String $getUserInfoUrl)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        HttpClientInterface $client,
+        LoggerInterface $logger,
+        String $getUserInfoUrl
+    ) {
         parent::__construct($registry, Utilisateur::class);
         $this->client = $client;
         $this->logger = $logger;
