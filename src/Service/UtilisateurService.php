@@ -22,7 +22,7 @@ class UtilisateurService
     private EtablissementMapper $etablissementMapper;
     private OrganisationAutorisationService $organisationAutorisationService;
     private EtablissementService $etablissementService;
-    private HabilitationsDomainesService $habilitationsDomainesService;
+    private RoleApplicationService $roleApplicationService;
 
     public function __construct(
         LoggerInterface                 $logger,
@@ -30,7 +30,7 @@ class UtilisateurService
         EtablissementMapper             $etablissementMapper,
         OrganisationAutorisationService $organisationAutorisationService,
         EtablissementService            $etablissementService,
-        HabilitationsDomainesService    $habilitationsDomainesService,
+        RoleApplicationService    $roleApplicationService,
         UtilisateurMapper               $utilisateurMapper)
     {
         $this->logger = $logger;
@@ -38,7 +38,7 @@ class UtilisateurService
         $this->etablissementMapper = $etablissementMapper;
         $this->organisationAutorisationService = $organisationAutorisationService;
         $this->etablissementService = $etablissementService;
-        $this->habilitationsDomainesService = $habilitationsDomainesService;
+        $this->roleApplicationService = $roleApplicationService;
         $this->utilisateurMapper = $utilisateurMapper;
     }
 
@@ -86,7 +86,7 @@ class UtilisateurService
         }
 
         # 4 - Récupération des habilitations scansante
-        $roleScanSante = $this->habilitationsDomainesService->getRoleScanSante(
+        $roleScanSante = $this->roleApplicationService->getRoleScanSante(
             $response->getHabilitationsDomaines(),
             $response->getHabilitationsOrganisation()
         );
