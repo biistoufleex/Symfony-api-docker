@@ -27,11 +27,11 @@ class OrganisationAutorisationService
      *
      * @param string $idOrganisation The ID of the organization for which to retrieve active authorizations and permissions.
      *
-     * @return array An array containing the active organization authorizations and permissions.
+     * @return array|null An array containing the active organization authorizations and permissions.
      *
      * @throws Exception If there is an issue with retrieving the organization authorizations, an exception is thrown,
      *                    and the issue is logged with details.
-    */
+     */
     public function getOrganisationAutorisations(String $idOrganisation): ?array
     {
         $this->logger->debug('Get habilitations organisations', ['idOrganisation' => $idOrganisation]);
@@ -63,8 +63,8 @@ class OrganisationAutorisationService
 
         foreach ($organisationAutorisation as $org) {
             $habilitationsOrganisations[] = [
-                'date_debut' => $org->getDateDebut() ? $org->getDateDebut()->format('d/m/Y') : null,
-                'date_fin' => $org->getDateFin() ? $org->getDateFin()->format('d/m/Y') : null,
+                'date_debut' => $org->getDateDebut()?->format('d/m/Y'),
+                'date_fin' => $org->getDateFin()?->format('d/m/Y'),
                 'perimetre' => $org->getPerimetre(),
                 'type_autorisation' => $org->getTypeAutorisation(),
             ];

@@ -22,7 +22,7 @@ class HabilitationsDomainesService
      *
      * @param array $habilitationDomaines An array of domain authorizations.
      *
-     * @return array An array containing Scan Santé roles based on domain authorizations.
+     * @return array|null An array containing Scan Santé roles based on domain authorizations.
      */
     public function getRoleScanSante(array $habilitationDomaines): ?array
     {

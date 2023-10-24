@@ -86,7 +86,10 @@ class UtilisateurService
         }
 
         # 4 - Récupération des habilitations scansante
-        $roleScanSante = $this->habilitationsDomainesService->getRoleScanSante($response->getHabilitationsDomaines());
+        $roleScanSante = $this->habilitationsDomainesService->getRoleScanSante(
+            $response->getHabilitationsDomaines(),
+            $response->getHabilitationsOrganisation()
+        );
         $response->setHabilitationsScansante($roleScanSante);
 
         $response->setRetour(Status::ok()->toArray());
