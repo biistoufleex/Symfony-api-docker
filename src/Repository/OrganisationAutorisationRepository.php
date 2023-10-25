@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\OrganisationAutorisation;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,10 +21,20 @@ class OrganisationAutorisationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OrganisationAutorisation::class);
     }
-
-    public function findActiveOrganisations($identifiant)
+    /**
+     * Find active organizations based on the provided identifier.
+     *
+     * This method queries the database to find active organizations associated with the provided identifier.
+     * It checks for organizations where the start date is less than or equal to the current date and time and
+     * where the end date is either null or greater than or equal to the current date and time.
+     *
+     * @param string $identifiant The identifier for which to find active organizations.
+     *
+     * @return array<string, mixed> An array of active organizations found in the database.
+     */
+    public function findActiveOrganisations(string $identifiant): array
     {
-        $currentDate = new \DateTime(); // Get the current date and time
+        $currentDate = new DateTime(); // Get the current date and time
 
         return $this->createQueryBuilder('oa')
             ->andWhere('oa.identifiantOrganisationPlage = :identifiant')

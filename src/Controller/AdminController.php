@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +35,7 @@ class AdminController extends AbstractController
     {
         try {
             return $this->json($this->utilisateurService->getUserInfo($id));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->json([
                 'retour' => Status::error($e->getMessage())->toArray()
             ]);

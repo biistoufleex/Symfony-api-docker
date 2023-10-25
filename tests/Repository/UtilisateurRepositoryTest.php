@@ -3,6 +3,7 @@
 namespace App\Tests\Repository;
 
 use App\Repository\UtilisateurRepository;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UtilisateurRepositoryTest extends KernelTestCase
@@ -15,24 +16,24 @@ class UtilisateurRepositoryTest extends KernelTestCase
         $this->utilisateurRepository = self::getContainer()->get(UtilisateurRepository::class);
     }
 
-    public function testGetDevelPlageXml()
+    public function testGetDevelPlageXml(): void
     {
         $idUser = getenv('ID_USER');
 
         $xml = $this->utilisateurRepository->getDevelPlageXml($idUser);
 
         $this->assertNotNull($xml);
-        $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
+        $this->assertInstanceOf(SimpleXMLElement::class, $xml);
     }
 
-    public function testGetDevelPlageXmlForNonExistentUser()
+    public function testGetDevelPlageXmlForNonExistentUser(): void
     {
         $idUser = 'USER_DOES_NOT_EXIST';
 
         $xml = $this->utilisateurRepository->getDevelPlageXml($idUser);
 
         $this->assertNotNull($xml);
-        $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
+        $this->assertInstanceOf(SimpleXMLElement::class, $xml);
         $this->assertNotNull($xml->exception);
     }
 }

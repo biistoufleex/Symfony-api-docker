@@ -3,14 +3,16 @@
 namespace App\Service;
 
 use App\constants\MessageConstants;
-use App\Entity\Utilisateur;
-use SimpleXMLElement;
 use App\Controller\Http\Responses\HabilitationReponse;
 use App\Controller\Http\Responses\Status;
+use App\Entity\Utilisateur;
 use App\Mapper\EtablissementMapper;
 use App\Mapper\UtilisateurMapper;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class UtilisateurService
 {
@@ -20,23 +22,23 @@ class UtilisateurService
     private EtablissementMapper $etablissementMapper;
     private OrganisationAutorisationService $organisationAutorisationService;
     private EtablissementService $etablissementService;
-    private HabilitationsDomainesService $habilitationsDomainesService;
+    private RoleApplicationService $roleApplicationService;
 
     public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        EtablissementMapper $etablissementMapper,
+        LoggerInterface                 $logger,
+        EntityManagerInterface          $entityManager,
+        EtablissementMapper             $etablissementMapper,
         OrganisationAutorisationService $organisationAutorisationService,
-        EtablissementService $etablissementService,
-        HabilitationsDomainesService $habilitationsDomainesService,
-        UtilisateurMapper $utilisateurMapper
+        EtablissementService            $etablissementService,
+        RoleApplicationService    $roleApplicationService,
+        UtilisateurMapper               $utilisateurMapper
     ) {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->etablissementMapper = $etablissementMapper;
         $this->organisationAutorisationService = $organisationAutorisationService;
         $this->etablissementService = $etablissementService;
-        $this->habilitationsDomainesService = $habilitationsDomainesService;
+        $this->roleApplicationService = $roleApplicationService;
         $this->utilisateurMapper = $utilisateurMapper;
     }
 
@@ -49,33 +51,35 @@ class UtilisateurService
      *
      * @param string $idUser The ID of the user for which to retrieve information and authorizations.
      *
-     * @return array An array containing user information and authorizations.
+     * @return array<string, mixed> An array containing user information and authorizations.
+     * @throws Exception|TransportExceptionInterface
      */
-    public function getUserInfo(String $idUser): array
+    public function getUserInfo(string $idUser): array
     {
         $this->logger->info('Get user info from devel-plage-infoservice', ['idUser' => $idUser]);
 
         $response = new HabilitationReponse();
         $response->setHabilitationsDomaines([]);
         $response->setHabilitationsScansante([]);
-        $ipe = null;
 
         # 1 - Récupération des informations de l’utilisateur
         $develXml = $this->getDevelXml($idUser);
-        $ipe = isset($develXml->ipe) ? (string) $develXml->ipe : null;
+        $ipe = isset($develXml->ipe) ? (string)$develXml->ipe : null;
         $userData = $this->utilisateurMapper->formatInfoUserXml($develXml);
-        $UtilisateurDto =   $this->utilisateurMapper->mapToUtilisateurDto($userData);
+        $UtilisateurDto = $this->utilisateurMapper->mapToUtilisateurDto($userData);
 
         $response->setInfoUtilisateur($UtilisateurDto);
 
         # 2 - Récupération des habilitations des organisations
-        $organisationAutorisations = $this->organisationAutorisationService->getOrganisationAutorisations($develXml->organisation->id);
-        $habilitationsOrganisations = $this->organisationAutorisationService->parseOrganisationAutorisation($organisationAutorisations);
+        $organisationAutorisations =
+            $this->organisationAutorisationService->getOrganisationAutorisations($develXml->organisation->id);
+        $habilitationsOrganisations =
+            $this->organisationAutorisationService->parseOrganisationAutorisation($organisationAutorisations);
 
         $response->setHabilitationsOrganisation($habilitationsOrganisations);
 
         # 3 - Récupération des habilitations domaines
-        $id = isset($develXml->niveau->id) ? (string) $develXml->niveau->id : null;
+        $id = isset($develXml->niveau->id) ? (string)$develXml->niveau->id : null;
         if ($id == 3) { // TODO: recup niveau etablissement id via la database
             $finessDomainsXml = $this->etablissementService->getFinessDomainXml($ipe);
             $finessDomains = $this->etablissementMapper->formatESInfoXml($finessDomainsXml);
@@ -84,7 +88,10 @@ class UtilisateurService
         }
 
         # 4 - Récupération des habilitations scansante
-        $roleScanSante = $this->habilitationsDomainesService->getRoleScanSante($response->getHabilitationsDomaines());
+        $roleScanSante = $this->roleApplicationService->getRoleScanSante(
+            $response->getHabilitationsDomaines(),
+            $response->getHabilitationsOrganisation()
+        );
         $response->setHabilitationsScansante($roleScanSante);
 
         $response->setRetour(Status::ok()->toArray());
@@ -103,19 +110,22 @@ class UtilisateurService
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the user information in XML format
      *                            or null if there is an issue with the InfoService API communication.
      *
-     * @throws \Exception If there is a problem with the InfoService API communication or if the API returns an exception,
-     *                    an exception is thrown, and the issue is logged with details.
+
+     * @throws Exception If there is a problem with the InfoService API communication or
+     *                   if the API returns an exception,
+     *                   an exception is thrown, and the issue is logged with details.
      */
-    public function getDevelXml(String $idUser): ?SimpleXMLElement
+    public function getDevelXml(string $idUser): ?SimpleXMLElement
     {
         $plageXml = $this->entityManager->getRepository(Utilisateur::class)->getDevelPlageXml($idUser);
 
-        if ($plageXml === null) {
+        if (!$plageXml) {
             $this->logger->error(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER, ['idUser' => $idUser]);
-            throw new \Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER);
-        } else if ($plageXml->exception) {
+            throw new Exception(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER);
+        }
+        if ($plageXml->exception) {
             $this->logger->error($plageXml->exception->libelle, ['idUser' => $idUser]);
-            throw new \Exception($plageXml->exception->libelle);
+            throw new Exception($plageXml->exception->libelle);
         }
 
         return $plageXml;

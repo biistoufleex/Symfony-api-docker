@@ -12,19 +12,25 @@ class UtilisateurDto
 
     public string $email;
 
-    public NiveauDTO $niveau;
+    public NiveauDto $niveau;
 
-    public OrganisationDTO $organisation;
+    public OrganisationDto $organisation;
 
+    /**
+     * @var array<int, mixed>
+     */
     public array $rolesScansante;
 
+    /**
+     * @param array<int, mixed> $rolesScansante
+     */
     public function __construct(
         int $id,
         string $nom,
         string $prenom,
         string $email,
-        NiveauDTO $niveau,
-        OrganisationDTO $organisation,
+        NiveauDto $niveau,
+        OrganisationDto $organisation,
         array $rolesScansante,
     ) {
         $this->id = $id;

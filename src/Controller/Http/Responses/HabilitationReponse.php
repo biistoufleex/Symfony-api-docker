@@ -7,10 +7,25 @@ use App\Dto\UtilisateurDto;
 class HabilitationReponse
 {
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $retour = [];
     private ?UtilisateurDto $info_utilisateur = null;
+
+    /**
+     * @var array<int, mixed>|null
+     */
     private ?array $habilitations_organisation = null;
+
+    /**
+     * @var array<int, mixed>|null
+     */
     private ?array $habilitations_domaines = null;
+
+    /**
+     * @var array<int, mixed>|null
+     */
     private ?array $habilitations_scansante = null;
 
     public function __construct()
@@ -29,11 +44,18 @@ class HabilitationReponse
         return $this;
     }
 
-    public function getHabilitationsOrganisation(): array
+    /**
+     * @return array<int, mixed>|null
+     */
+    public function getHabilitationsOrganisation(): ?array
     {
         return $this->habilitations_organisation;
     }
 
+    /**
+     * @param array<int, mixed> $habilitationsOrganisation
+     * @return self
+     */
     public function setHabilitationsOrganisation(array $habilitationsOrganisation): self
     {
         $this->habilitations_organisation = $habilitationsOrganisation;
@@ -41,11 +63,18 @@ class HabilitationReponse
         return $this;
     }
 
+    /**
+     * @return array<int, mixed>|null
+     */
     public function getHabilitationsDomaines(): ?array
     {
         return $this->habilitations_domaines;
     }
 
+    /**
+     * @param array<int, mixed> $habilitationsDomaines
+     * @return self
+     */
     public function setHabilitationsDomaines(array $habilitationsDomaines): self
     {
         $this->habilitations_domaines = $habilitationsDomaines;
@@ -53,23 +82,37 @@ class HabilitationReponse
         return $this;
     }
 
-    public function getHabilitationsScansante(): array
+    /**
+     * @return array<int, mixed>|null
+     */
+    public function getHabilitationsScansante(): ?array
     {
         return $this->habilitations_scansante;
     }
 
-    public function setHabilitationsScansante(array $habilitationsScansante): self
+    /**
+     * @param array<int, mixed>|null $habilitationsScansante
+     * @return self
+     */
+    public function setHabilitationsScansante(?array $habilitationsScansante): self
     {
         $this->habilitations_scansante = $habilitationsScansante;
 
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getRetour(): array
     {
         return $this->retour;
     }
 
+    /**
+     * @param array<string, mixed> $retour
+     * @return self
+     */
     public function setRetour(array $retour): self
     {
         $this->retour = $retour;
@@ -77,6 +120,9 @@ class HabilitationReponse
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

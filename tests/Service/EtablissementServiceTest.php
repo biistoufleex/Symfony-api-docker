@@ -3,7 +3,9 @@
 namespace App\Tests\Service;
 
 use App\Service\EtablissementService;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Throwable;
 
 class EtablissementServiceTest extends KernelTestCase
 {
@@ -16,7 +18,7 @@ class EtablissementServiceTest extends KernelTestCase
         $finessDomainsXml = $etablissementService->getFinessDomainXml($ipe);
 
         $this->assertNotNull($finessDomainsXml);
-        $this->assertInstanceOf(\SimpleXMLElement::class, $finessDomainsXml);
+        $this->assertInstanceOf(SimpleXMLElement::class, $finessDomainsXml);
     }
 
     public function testGetFinessDomainXmlFail(): void
@@ -29,7 +31,7 @@ class EtablissementServiceTest extends KernelTestCase
 
         try {
             $finessDomainsXml = $etablissementService->getFinessDomainXml($ipe);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->assertNotNull($th);
         }
     }

@@ -20,6 +20,9 @@ class Niveau
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    /**
+     * @var Collection<int, Utilisateur>
+     */
     #[ORM\OneToMany(mappedBy: 'niveau', targetEntity: Utilisateur::class)]
     private Collection $utilisateurs;
 

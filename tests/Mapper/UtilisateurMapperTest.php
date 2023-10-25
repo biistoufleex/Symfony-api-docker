@@ -3,6 +3,7 @@
 namespace App\Tests\Mapper;
 
 use App\Mapper\UtilisateurMapper;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UtilisateurMapperTest extends KernelTestCase
@@ -12,10 +13,13 @@ class UtilisateurMapperTest extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->utilisateurMapper = self::getContainer()->get(UtilisateurMapper::class);
+        try {
+            $this->utilisateurMapper = self::getContainer()->get(UtilisateurMapper::class);
+        } catch (Exception) {
+        }
     }
 
-    public function testMapToUtilisateurDto(): void
+    public function testMapToUtilisateurDto():void
     {
         $xml = simplexml_load_file(__DIR__ . '/../data/infoService-userInfo.xml');
 

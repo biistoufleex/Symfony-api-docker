@@ -13,17 +13,20 @@ class Status
         $this->message = $message;
     }
 
-    static function ok()
+    static function ok(): Status
     {
         return new Status('OK', null);
     }
 
-    static function error(String $message)
+    static function error(String $message): Status
     {
         return new Status('KO', $message);
     }
 
-    public function toArray()
+    /**
+     * @return array<string, string>
+     */
+    public function toArray(): array
     {
         return [
             'code' => $this->code,
