@@ -41,4 +41,14 @@ class AdminController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/test', name: 'app_test', methods: ['GET'])]
+    public function test(): JsonResponse
+    {
+        return $this->json([
+            'env' => $_ENV['ENV_FILE'],
+            'database' => $_ENV['DATABASE_URL'],
+            'test' => $_ENV['TEST']
+        ]);
+    }
 }
