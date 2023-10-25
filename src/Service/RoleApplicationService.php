@@ -26,13 +26,13 @@ class RoleApplicationService
      * associated with the domain authorizations and ensures that the corresponding organization authorizations exist.
      * The Scan Santé roles are collected and returned as an array.
      *
-     * @param array<int, mixed>|null $habilitationsDomaines An array of domain authorizations.
-     * @param array<int, mixed>|null $organisationsHabilitations An array of organization authorizations.
+     * @param array<int, mixed> $habilitationsDomaines An array of domain authorizations.
+     * @param array<int, mixed> $organisationsHabilitations An array of organization authorizations.
      *
-     * @return array<int, mixed> An array containing Scan Santé roles
-     *                           based on the domain and organization authorizations.
+     * @return array<int, mixed> An array containing Scan Santé roles based on
+     *                           the domain and organization authorizations.
      */
-    public function getRoleScanSante(?array $habilitationsDomaines, ?array $organisationsHabilitations): array
+    public function getRoleScanSante(array $habilitationsDomaines, array $organisationsHabilitations): array
     {
         $this->logger->debug('Get Scan Santé roles');
 
