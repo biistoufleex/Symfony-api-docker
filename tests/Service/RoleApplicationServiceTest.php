@@ -17,10 +17,9 @@ class RoleApplicationServiceTest extends KernelTestCase
         $roleScanSante = $roleApplicationService->getRoleScanSante($habilitationsDomaines, $organisationsHabilitations);
 
         $this->assertNotEmpty($roleScanSante);
-        $this->assertCount(3, $roleScanSante);
-        $this->assertContains('Lecteur Institution Médico-Social', $roleScanSante);
-        $this->assertContains('Lecteur institution Finance', $roleScanSante);
-        $this->assertContains('Lecteur Test', $roleScanSante);
+        $this->assertCount(2, $roleScanSante);
+        $this->assertContains('Lecteur Fincances', $roleScanSante);
+        $this->assertContains('Lecteur Institution', $roleScanSante);
     }
 
     public function testGetRoleScanSanteNotFound(): void
