@@ -25,12 +25,12 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Repository\UtilisateurRepository:
+    App\Repository\Common\UtilisateurRepository:
         arguments:
             $getUserInfoUrl: '%app.getUserInfoUrl%'
         public: false
 
-    App\Repository\EtablissementRepository:
+    App\Repository\Api\ApiEtablissementRepository:
         arguments:
             $getEtablissementInfoUrl: '%app.getEtablissementInfoUrl%'
         public: false
