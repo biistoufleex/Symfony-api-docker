@@ -34,7 +34,7 @@ class Utilisateur
     /**
      * @var array<string, mixed>
      */
-    #[ORM\Column(type: 'Json_array')]
+    #[ORM\Column(type: 'array')]
     private array $rolesScansante = [];
 
     public function setId(int $id): static

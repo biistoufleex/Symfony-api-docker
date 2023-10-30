@@ -7,7 +7,8 @@ when@dev:
         handlers:
             main:
                 type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
+#                path: "%kernel.logs_dir%/%kernel.environment%.log" # uncomment to log in local
+                path: php://stderr # uncomment to log in Docker
                 level: debug
                 channels: ["!event"]
             # uncomment to get logging in your browser

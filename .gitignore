@@ -12,7 +12,6 @@
 .idea
 .vscode/
 
-
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
@@ -21,3 +20,5 @@
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+storage-db/

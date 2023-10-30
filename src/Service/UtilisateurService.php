@@ -110,7 +110,6 @@ class UtilisateurService
      * @return SimpleXMLElement|null A SimpleXMLElement object containing the user information in XML format
      *                            or null if there is an issue with the InfoService API communication.
      *
-
      * @throws Exception If there is a problem with the InfoService API communication or
      *                   if the API returns an exception,
      *                   an exception is thrown, and the issue is logged with details.
