@@ -22,3 +22,7 @@ phpstan.neon
 ###< phpstan/phpstan ###
 
 storage-db/
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###

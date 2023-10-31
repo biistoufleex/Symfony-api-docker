@@ -1,0 +1,8 @@
+. create backoffice table
+. create table depot_mr005
+. creation page etablissement
+. creation page depot
+    . formulaire depot
+    . validation formulaire
+    . Stockage du récépissé dans un stockage S3
+    . envoi de mail
