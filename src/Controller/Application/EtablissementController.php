@@ -40,9 +40,14 @@ class EtablissementController extends AbstractController
 
         try {
             $message = $this->applicationMessageService->getEtablissementPageMessage($usecase);
-        } catch (Exception $e) {
-            // TODO: gestion des erreurs en cas d'absence de message ?
-            $this->addFlash('error', $e->getMessage());
+        } catch (Exception $exception) {
+            $response = $this->render('errors.html.twig', [
+                'exception' => $exception,
+            ]);
+
+            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            return $response;
         }
 
         return $this->render('etablissement/index.html.twig', [
@@ -58,9 +63,14 @@ class EtablissementController extends AbstractController
 
         try {
             $message = $this->applicationMessageService->getMessageByUseCase('message_depot_recepice');
-        } catch (Exception $e) {
-            // TODO: gestion des erreurs en cas d'absence de message ?
-            $this->addFlash('error', $e->getMessage());
+        } catch (Exception $exception) {
+            $response = $this->render('errors.html.twig', [
+                'exception' => $exception,
+            ]);
+
+            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            return $response;
         }
 
         $depotMr005 = new DepotMr005Form();
