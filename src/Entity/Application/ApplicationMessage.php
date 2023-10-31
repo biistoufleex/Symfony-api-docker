@@ -5,6 +5,8 @@ namespace App\Entity\Application;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\Application\ApplicationMessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ApplicationMessageRepository::class)]
 #[ApiResource]
@@ -16,12 +18,15 @@ class ApplicationMessage
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
     private ?string $usecase = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
     private ?string $uri = null;
 
     #[ORM\Column(length: 1500, nullable: true)]
+    #[Assert\Length(max: 1500)]
     private ?string $message = null;
 
     public function getId(): ?int
@@ -64,4 +69,6 @@ class ApplicationMessage
 
         return $this;
     }
+
+
 }

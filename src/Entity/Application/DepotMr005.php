@@ -7,6 +7,7 @@ use App\Repository\Application\DepotMr005Repository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DepotMr005Repository::class)]
 #[ApiResource]
@@ -18,18 +19,24 @@ class DepotMr005
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(max: 50)]
     private ?string $idPlage = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(max: 100)]
+    #[Assert\Email]
     private ?string $courriel = null;
 
     #[ORM\Column(length: 9)]
+    #[Assert\Length(min: 9, max: 9)]
     private ?string $ipe = null;
 
     #[ORM\Column(length: 9)]
+    #[Assert\Length(min: 9, max: 9)]
     private ?string $finess = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(max: 100)]
     private ?string $raisonSocial = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
