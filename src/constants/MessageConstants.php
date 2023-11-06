@@ -10,4 +10,5 @@ class MessageConstants
     public const PROBLEME_AUCUN_MESSAGE_USECASE='Aucun message pour le useCase : ';
     public const PROBLEME_AUCUN_MESSAGE_URI='Aucun message pour l\'uri : ';
     public const RECEPICE_NOT_FOUND='Recepice not found';
+    public CONST ERROR_EMAIL_SENDING = 'Erreur lors de l\'envoi de l\'email';
 }

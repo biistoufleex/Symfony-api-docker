@@ -11,6 +11,9 @@ php bin/console doctrine:fixtures:load
 php bin/console --env=test doctrine:database:create
 php bin/console --env=test doctrine:schema:create
 php bin/console --env=test doctrine:fixtures:load
+
+docker run -d -p 1080:1080 -p 1025:1025 --name mailcatcher schickling/mailcatcher
+
 ````
 # Utils
 ```

@@ -6,7 +6,9 @@ use App\Entity\Application\Form\DepotMr005Form;
 use App\Form\Type\DepotMr005Type;
 use App\Service\Application\ApplicationMessageService;
 use App\Service\Application\DepotMr005Service;
+use App\Service\Application\EmailService;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,14 +19,19 @@ class EtablissementController extends AbstractController
 {
     private ApplicationMessageService $applicationMessageService;
     private DepotMr005Service $depotMr005Service;
+    private EmailService $emailService;
 
     public function __construct(
+        LoggerInterface           $logger,
         ApplicationMessageService $applicationMessageService,
-        DepotMr005Service         $depotMr005Service
+        DepotMr005Service         $depotMr005Service,
+        EmailService              $emailService
     )
     {
+        $this->logger = $logger;
         $this->applicationMessageService = $applicationMessageService;
         $this->depotMr005Service = $depotMr005Service;
+        $this->emailService = $emailService;
     }
 
     // TODO: add security
@@ -56,7 +63,7 @@ class EtablissementController extends AbstractController
         ]);
     }
 
-    #[Route('/depot_mr005', name: 'depot_mr005')]
+    #[Route('/depot_mr005', name: 'depot_mr005', methods: ['GET', 'POST'])]
     public function depotMr005(Request $request): Response
     {
         $message = null;
@@ -84,10 +91,24 @@ class EtablissementController extends AbstractController
                 $file = $request->files->all();
                 $data = $request->request->all();
 
-                dd($file, $data); // TODO: remove
                 // stock in s3 database
 
                 // send mail
+//                $emailApplication = // TODO: GET DATA FROM BDD OU EN DUR ?
+                $emailApplication = 'from@mail.fr';
+                $emailResonsable = $data['depot_mr005']['courriel'];
+
+                try {
+                    $this->emailService->sendEmail(
+                        $emailApplication,
+                        $emailResonsable,
+                        'depot de recepisse',
+                        'un depot de recepisse a ete effectue'
+                    );
+                } catch (Exception $e) {
+                    return new Response($e->getMessage()); // TODO: change
+                }
+                return new Response('ok');// TODO: change
             }
         }
 

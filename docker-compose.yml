@@ -51,6 +51,17 @@ services:
     networks:
       - app_network
 
+  # Mailcatcher Service
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: mailcatcher
+    restart: unless-stopped
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - app_network
+
 # Docker Networks
 networks:
   app_network:
