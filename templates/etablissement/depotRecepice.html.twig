@@ -1,10 +1,207 @@
-<!DOCTYPE html>
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
 
-<title>Depot recepice</title>
+            <div class="text-start w-75 pb-5">
+                {{ message | raw }}
+            </div>
+            {{ form_start(form, {
+                attr: {
+                    'class': 'needs-validation',
+                    'novalidate': 'novalidate'
+                }
+            }) }}
 
-{% block body %}
-    <h1> Page Depot </h1>
-     {{ message | raw }}
+            <div class="d-inline-block w-auto align-middle">
+                <div class="row p-3 border" style="background-color: #DADADA">
+                    <h4 class="">L’ORGANISME DEMANDEUR</h4>
+                </div>
+                <div class="row border-left">
+                    <div class="col-6">
+                        {{ form_label(form.ipe) }}
+                    </div>
+                    <div class="col-6 p-0">
+                        {{ form_widget(form.ipe, {
+                            attr: {
+                                'class': 'form-control',
+                                'readonly': 'readonly',
+                                'value': ipe
+                            }
+                        }) }}
+                    </div>
+                </div>
+                <div class="row border-left">
+                    <div class="col-6">
+                        {{ form_label(form.finess) }}
+                    </div>
+                    <div class="col-6 p-0">
+                        {{ form_widget(form.finess, {
+                            attr: {
+                                'class': 'form-control',
+                                'readonly': 'readonly',
+                                'value': finess
+                            }
+                        }) }}
+                    </div>
+                </div>
+                <div class="row border-left border-bottom">
+                    <div class="col-6">
+                        {{ form_label(form.raisonSociale) }}
+                    </div>
+                    <div class="col-6 p-0">
+                        {{ form_widget(form.raisonSociale, {
+                            attr: {
+                                'class': 'form-control',
+                                'readonly': 'readonly',
+                                'value': raisonSociale
+                            }
+                        }) }}
+                    </div>
+                </div>
 
-    {{ form(form) }}
+                <div class="row p-3 mt-3 border" style="background-color: #DADADA">
+                    <h4 class="">IDENTIFICATION DU RESPONSABLE LEGAL DE L’ORGANISME</h4>
+                </div>
+                <div class="row border-left border-bottom border-right">
+                    <div class="col-2 border">
+                        {{ form_label(form.civilite) }}
+                    </div>
+                    <div class="col-2 border px-0">
+                        {{ form_widget(form.civilite, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                    </div>
+                    <div class="col-2 border">
+                        {{ form_label(form.prenom) }}
+                    </div>
+                    <div class="col-2 border px-0">
+                        {{ form_widget(form.prenom, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                            {{ form_errors(form.prenom) }}
+                        </div>
+                    </div>
+                    <div class="col-2 border">
+                        {{ form_label(form.nom) }}
+                    </div>
+                    <div class="col-2 px-0">
+                        {{ form_widget(form.nom, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                            {{ form_errors(form.prenom) }}
+                        </div>
+                    </div>
+                    <div class="col-2 border">
+                        {{ form_label(form.fonction) }}
+                    </div>
+                    <div class="col-10 px-0">
+                        {{ form_widget(form.fonction, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                            {{ form_errors(form.fonction) }}
+                        </div>
+                    </div>
+                    <div class="col-2 border">
+                        {{ form_label(form.courriel) }}
+                    </div>
+                    <div class="col-10 px-0">
+                        {{ form_widget(form.courriel, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                        {{ form_errors(form.courriel) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row p-3 mt-3 border" style="background-color:#B4C6E7">
+                    <h4 class="">Autorisation Cnil d’accès aux données d’activité : MR005</h4>
+                </div>
+                <div class="row">
+                    <div class="col-4 border">
+                        {{ form_label(form.numeroRecepice) }}
+                    </div>
+                    <div class="col-8 px-0">
+                        {{ form_widget(form.numeroRecepice, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                            {{ form_errors(form.numeroRecepice) }}
+                        </div>
+                    </div>
+                    <div class="col-4 border">
+                        {{ form_label(form.dateAtribution) }}
+                    </div>
+                    <div class="col-8 px-0">
+                        {{ form_widget(form.dateAtribution, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                            {{ form_errors(form.dateAtribution) }}
+                        </div>
+                    </div>
+                    <div class="col-4 border">
+                        {{ form_label(form.fileType) }}
+                    </div>
+                    <div class="col-8 px-0">
+                        {{ form_widget(form.fileType, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        <div class="invalid-tooltip">
+                            {{ form_errors(form.fileType) }}
+                        </div>
+                    </div>
+                </div>
+                {{ form_row(form.send, {
+                    attr: {
+                        'class': 'btn btn-primary mt-3'
+                    }
+                }) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            let forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })();
+    </script>
 {% endblock %}

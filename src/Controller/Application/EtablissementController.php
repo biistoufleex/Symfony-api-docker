@@ -67,6 +67,9 @@ class EtablissementController extends AbstractController
     public function depotMr005(Request $request): Response
     {
         $message = null;
+        $ipe = '000000001'; // TODO: get from token
+        $finess = '000000111'; // TODO: get from token
+        $raisonSocial = 'test'; // TODO: get from token
 
         try {
             $message = $this->applicationMessageService->getMessageByUseCase('message_depot_recepice');
@@ -90,7 +93,9 @@ class EtablissementController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $file = $request->files->all();
                 $data = $request->request->all();
-
+                $data['depot_mr005']['ipe'] = $ipe;
+                $data['depot_mr005']['finess'] = $finess;
+                $data['depot_mr005']['raisonSociale'] = $raisonSocial;
                 // stock in s3 database
 
                 // send mail
@@ -115,6 +120,9 @@ class EtablissementController extends AbstractController
         return $this->render('etablissement/depotRecepice.html.twig', [
             'message' => $message->getMessage(),
             'form' => $form->createView(),
+            'ipe' => $ipe,
+            'finess' => $finess,
+            'raisonSociale' => $raisonSocial,
         ]);
     }
 }

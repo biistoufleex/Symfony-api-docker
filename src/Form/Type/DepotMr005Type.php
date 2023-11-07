@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
@@ -21,81 +22,76 @@ class DepotMr005Type extends AbstractType
     {
         $builder
             ->add('ipe', TextType::class, [
-                'label' => 'IPE',
+                'label' => 'IPE: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'IPE',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'L\'ipe est obligatoire.']),
                 ],
             ])
             ->add('finess', TextType::class, [
-                'label' => 'FINESS',
+                'label' => 'N° FINESS: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'FINESS',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'La finess est obligatoire.']),
                 ],
             ])
             ->add('raisonSociale', TextType::class, [
-                'label' => 'Raison sociale',
+                'label' => 'Raison Sociale: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Raison sociale',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'La raison sociale est obligatoire.']),
                 ],
             ])
             ->add('civilite', ChoiceType::class, [
-                'label' => 'Civilité',
+                'label' => 'Civilité: ',
                 'choices' => [
                     'M' => 'Monsieur',
                     'Mme' => 'Madame',
                 ],
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Civilité',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'La civilité est obligatoire.']),
                 ],
             ])
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'Nom: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Nom',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Le nom est obligatoire.']),
                 ],
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'Prénom: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Prénom',
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le prenom est obligatoire.']),
                 ],
             ])
             ->add('fonction', TextType::class, [
-                'label' => 'Fonction',
+                'label' => 'Fonction: ',
                 'attr' =>   [
                     'class' => 'form-control',
-                    'placeholder' => 'Fonction',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'La fonction est obligatoire.']),
                 ],
             ])
             ->add('courriel', EmailType::class, [
-                'label' => 'Courriel',
+                'label' => 'Courriel: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Courriel',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Le courriel est obligatoire.']),
@@ -103,32 +99,38 @@ class DepotMr005Type extends AbstractType
                 ],
             ])
             ->add('numeroRecepice', IntegerType::class, [
-                'label' => 'Numéro de récépissé',
+                'label' => 'Numéro de récépissé: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Numéro de récépissé',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de récépissé est obligatoire.']),
                 ],
             ])
             ->add('dateAtribution', DateType::class, [
-                'label' => 'Date d\'attribution',
+                'label' => 'Date d\'attribution: ',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Date d\'attribution',
                     'widget' => 'choice',
+                    'data-format' => 'dd-mm-yyyy',
+                    'data-provide' => 'datepicker',
                 ],
             ])
             ->add('fileType', FileType::class, [
-                'label' => 'Fichier',
+                'label' => 'Transmission du récépissé: ',
                 'mapped' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Fichier',
+                    'placeholder' => 'cliquer pour déposer votre récépissé de MR005',
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le fichier est obligatoire.']),
                 ],
             ])
-            ->add('send', SubmitType::class)
+            ->add('send', SubmitType::class, [
+                'label' => 'Envoyer la demande de validation',
+            ])
         ;
     }
 }
