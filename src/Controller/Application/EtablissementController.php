@@ -63,7 +63,7 @@ class EtablissementController extends AbstractController
             return $response;
         }
 
-        return $this->render('etablissement/index.html.twig', [
+        return $this->render('etablissement/etablissement.html.twig', [
             'message' => $message['page']->getMessage(),
             'button' => $message['button']->getMessage(),
         ]);
