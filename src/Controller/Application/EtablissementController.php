@@ -11,6 +11,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,22 +21,26 @@ class EtablissementController extends AbstractController
     private ApplicationMessageService $applicationMessageService;
     private DepotMr005Service $depotMr005Service;
     private EmailService $emailService;
+    private LoggerInterface $logger;
+    private String $emailApplication;
 
     public function __construct(
         LoggerInterface           $logger,
         ApplicationMessageService $applicationMessageService,
         DepotMr005Service         $depotMr005Service,
-        EmailService              $emailService
+        EmailService              $emailService,
+        String                    $emailApplication
     )
     {
         $this->logger = $logger;
         $this->applicationMessageService = $applicationMessageService;
         $this->depotMr005Service = $depotMr005Service;
         $this->emailService = $emailService;
+        $this->emailApplication = $emailApplication;
     }
 
     // TODO: add security
-    #[Route('/', name: 'index')]
+    #[Route('/', name: 'etablissement_index')]
     public function index(): Response
     {
         $message = null;
@@ -48,6 +53,7 @@ class EtablissementController extends AbstractController
         try {
             $message = $this->applicationMessageService->getEtablissementPageMessage($usecase);
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), ['ipe' => $ipe]);
             $response = $this->render('errors.html.twig', [
                 'exception' => $exception,
             ]);
@@ -98,14 +104,10 @@ class EtablissementController extends AbstractController
                 $data['depot_mr005']['raisonSociale'] = $raisonSocial;
                 // stock in s3 database
 
-                // send mail
-//                $emailApplication = // TODO: GET DATA FROM BDD OU EN DUR ?
-                $emailApplication = 'from@mail.fr';
                 $emailResonsable = $data['depot_mr005']['courriel'];
-
                 try {
                     $this->emailService->sendEmail(
-                        $emailApplication,
+                        $this->emailApplication,
                         $emailResonsable,
                         'depot de recepisse',
                         'un depot de recepisse a ete effectue'
@@ -125,4 +127,6 @@ class EtablissementController extends AbstractController
             'raisonSociale' => $raisonSocial,
         ]);
     }
+
+    // create route avec formulaire en lecture seul
 }

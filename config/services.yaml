@@ -6,6 +6,7 @@
 parameters:
     app.getUserInfoUrl: '%env(GET_USER_INFO_URL)%'
     app.getEtablissementInfoUrl: '%env(GET_ETABLISSEMENT_INFO_URL)%'
+    app.emailApplication: '%env(EMAIL_APPLICATION)%'
 
 services:
     # default configuration for services in *this* file
@@ -33,4 +34,9 @@ services:
     App\Repository\Api\ApiEtablissementRepository:
         arguments:
             $getEtablissementInfoUrl: '%app.getEtablissementInfoUrl%'
+        public: false
+
+    App\Controller\Application\EtablissementController:
+        arguments:
+            $emailApplication: '%app.emailApplication%'
         public: false

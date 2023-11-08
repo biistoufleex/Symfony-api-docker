@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 
 class DepotMr005Type extends AbstractType
@@ -112,9 +113,7 @@ class DepotMr005Type extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Date d\'attribution',
-                    'widget' => 'choice',
                     'data-format' => 'dd-mm-yyyy',
-                    'data-provide' => 'datepicker',
                 ],
             ])
             ->add('fileType', FileType::class, [
@@ -123,9 +122,6 @@ class DepotMr005Type extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'cliquer pour déposer votre récépissé de MR005',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Le fichier est obligatoire.']),
                 ],
             ])
             ->add('send', SubmitType::class, [
