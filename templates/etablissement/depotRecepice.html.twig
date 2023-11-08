@@ -5,6 +5,7 @@
 
             <div class="text-start w-75 pb-5">
                 {{ message | raw }}
+
             </div>
             {{ form_start(form, {
                 attr: {
@@ -24,7 +25,6 @@
                     <div class="col-6 p-0">
                         {{ form_widget(form.ipe, {
                             attr: {
-                                'class': 'form-control',
                                 'readonly': 'readonly',
                                 'value': ipe
                             }
@@ -38,7 +38,6 @@
                     <div class="col-6 p-0">
                         {{ form_widget(form.finess, {
                             attr: {
-                                'class': 'form-control',
                                 'readonly': 'readonly',
                                 'value': finess
                             }
@@ -52,7 +51,6 @@
                     <div class="col-6 p-0">
                         {{ form_widget(form.raisonSociale, {
                             attr: {
-                                'class': 'form-control',
                                 'readonly': 'readonly',
                                 'value': raisonSociale
                             }
@@ -68,21 +66,13 @@
                         {{ form_label(form.civilite) }}
                     </div>
                     <div class="col-2 border px-0">
-                        {{ form_widget(form.civilite, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.civilite) }}
                     </div>
                     <div class="col-2 border">
                         {{ form_label(form.prenom) }}
                     </div>
                     <div class="col-2 border px-0">
-                        {{ form_widget(form.prenom, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.prenom) }}
                         <div class="invalid-tooltip">
                             {{ form_errors(form.prenom) }}
                         </div>
@@ -91,11 +81,7 @@
                         {{ form_label(form.nom) }}
                     </div>
                     <div class="col-2 px-0">
-                        {{ form_widget(form.nom, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.nom) }}
                         <div class="invalid-tooltip">
                             {{ form_errors(form.prenom) }}
                         </div>
@@ -104,11 +90,7 @@
                         {{ form_label(form.fonction) }}
                     </div>
                     <div class="col-10 px-0">
-                        {{ form_widget(form.fonction, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.fonction) }}
                         <div class="invalid-tooltip">
                             {{ form_errors(form.fonction) }}
                         </div>
@@ -117,13 +99,9 @@
                         {{ form_label(form.courriel) }}
                     </div>
                     <div class="col-10 px-0">
-                        {{ form_widget(form.courriel, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.courriel) }}
                         <div class="invalid-tooltip">
-                        {{ form_errors(form.courriel) }}
+                            {{ form_errors(form.courriel) }}
                         </div>
                     </div>
                 </div>
@@ -136,11 +114,7 @@
                         {{ form_label(form.numeroRecepice) }}
                     </div>
                     <div class="col-8 px-0">
-                        {{ form_widget(form.numeroRecepice, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.numeroRecepice) }}
                         <div class="invalid-tooltip">
                             {{ form_errors(form.numeroRecepice) }}
                         </div>
@@ -149,11 +123,7 @@
                         {{ form_label(form.dateAtribution) }}
                     </div>
                     <div class="col-8 px-0">
-                        {{ form_widget(form.dateAtribution, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.dateAtribution) }}
                         <div class="invalid-tooltip">
                             {{ form_errors(form.dateAtribution) }}
                         </div>
@@ -162,11 +132,7 @@
                         {{ form_label(form.fileType) }}
                     </div>
                     <div class="col-8 px-0">
-                        {{ form_widget(form.fileType, {
-                            attr: {
-                                'class': 'form-control',
-                            }
-                        }) }}
+                        {{ form_widget(form.fileType) }}
                         <div class="invalid-tooltip">
                             {{ form_errors(form.fileType) }}
                         </div>
