@@ -30,5 +30,4 @@ class DepotMr005Service
         $this->logger->info('getRecepiceByFiness');
         return $this->depotMr005Repository->findBy(['finess' => $finess]);
     }
-
 }

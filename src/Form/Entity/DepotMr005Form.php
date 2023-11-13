@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Application\Form;
+namespace App\Form\Entity;
 
 use DateTimeInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;

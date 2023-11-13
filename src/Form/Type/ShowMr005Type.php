@@ -2,30 +2,16 @@
 
 namespace App\Form\Type;
 
-use App\Service\Application\DepotMr005ValidationService;
-use App\Validator\Constraints\RecepiceExist;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
-class DepotMr005Type extends AbstractType
+class ShowMr005Type extends AbstractType
 {
-    private DepotMr005ValidationService $depotMr005ValidationService;
-
-    public function __construct(DepotMr005ValidationService $depotMr005ValidationService)
-    {
-        $this->depotMr005ValidationService = $depotMr005ValidationService;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -33,46 +19,35 @@ class DepotMr005Type extends AbstractType
                 'label' => 'IPE: ',
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'L\'ipe est obligatoire.']),
+                    'readonly' => 'readonly',
                 ],
             ])
             ->add('finess', TextType::class, [
                 'label' => 'N° FINESS: ',
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'La finess est obligatoire.']),
+                    'readonly' => 'readonly',
                 ],
             ])
-            ->add('raisonSociale', TextType::class, [
+            ->add('raisonSocial', TextType::class, [
                 'label' => 'Raison Sociale: ',
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'La raison sociale est obligatoire.']),
+                    'readonly' => 'readonly',
                 ],
             ])
-            ->add('civilite', ChoiceType::class, [
+            ->add('civilite', TextType::class, [
                 'label' => 'Civilité: ',
-                'choices' => [
-                    'M' => 'Monsieur',
-                    'Mme' => 'Madame',
-                ],
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'La civilité est obligatoire.']),
+                    'readonly' => 'readonly',
                 ],
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Nom: ',
                 'attr' => [
                     'class' => 'form-control',
+                    'readonly' => 'readonly',
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Le nom est obligatoire.']),
@@ -82,58 +57,44 @@ class DepotMr005Type extends AbstractType
                 'label' => 'Prénom: ',
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Le prenom est obligatoire.']),
+                    'readonly' => 'readonly',
                 ],
             ])
             ->add('fonction', TextType::class, [
                 'label' => 'Fonction: ',
                 'attr' =>   [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'La fonction est obligatoire.']),
+                    'readonly' => 'readonly',
                 ],
             ])
             ->add('courriel', EmailType::class, [
                 'label' => 'Courriel: ',
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Le courriel est obligatoire.']),
-                    new Email(['message' => 'Le courriel est invalide.']),
+                    'readonly' => 'readonly',
                 ],
             ])
             ->add('numeroRecepice', IntegerType::class, [
                 'label' => 'Numéro de récépissé: ',
                 'attr' => [
                     'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Le numéro de récépissé est obligatoire.']),
-                    new RecepiceExist($this->depotMr005ValidationService),
+                    'readonly' => 'readonly',
                 ],
             ])
-            ->add('dateAtribution', DateType::class, [
+            ->add('dateAttribution', TextType::class, [
                 'label' => 'Date d\'attribution: ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Date d\'attribution',
-                    'data-format' => 'dd-mm-yyyy',
+                    'readonly' => 'readonly',
                 ],
             ])
-            ->add('fileType', FileType::class, [
+            ->add('filePath', TextType::class, [
                 'label' => 'Transmission du récépissé: ',
                 'mapped' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'cliquer pour déposer votre récépissé de MR005',
+                    'readonly' => 'readonly',
                 ],
-            ])
-            ->add('send', SubmitType::class, [
-                'label' => 'Envoyer la demande de validation',
             ])
         ;
     }

@@ -2,16 +2,18 @@
 
 namespace App\Controller\Application;
 
-use App\Entity\Application\Form\DepotMr005Form;
+use App\Form\Entity\DepotMr005Form;
 use App\Form\Type\DepotMr005Type;
+use App\Form\Type\ShowMr005Type;
+use App\Mapper\Application\DepotMr005ValidationMapper;
 use App\Service\Application\ApplicationMessageService;
 use App\Service\Application\DepotMr005Service;
+use App\Service\Application\DepotMr005ValidationService;
 use App\Service\Application\EmailService;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,13 +25,17 @@ class EtablissementController extends AbstractController
     private EmailService $emailService;
     private LoggerInterface $logger;
     private String $emailApplication;
+    private DepotMr005ValidationMapper $depotMr005ValidationMapper;
+    private DepotMr005ValidationService $depotMr005ValidationService;
 
     public function __construct(
-        LoggerInterface           $logger,
-        ApplicationMessageService $applicationMessageService,
-        DepotMr005Service         $depotMr005Service,
-        EmailService              $emailService,
-        String                    $emailApplication
+        LoggerInterface            $logger,
+        ApplicationMessageService  $applicationMessageService,
+        DepotMr005Service          $depotMr005Service,
+        EmailService               $emailService,
+        String                     $emailApplication,
+        DepotMr005ValidationMapper $depotMr005ValidationMapper,
+        DepotMr005ValidationService $depotMr005ValidationService
     )
     {
         $this->logger = $logger;
@@ -37,6 +43,9 @@ class EtablissementController extends AbstractController
         $this->depotMr005Service = $depotMr005Service;
         $this->emailService = $emailService;
         $this->emailApplication = $emailApplication;
+        $this->depotMr005ValidationMapper = $depotMr005ValidationMapper;
+        $this->depotMr005ValidationService = $depotMr005ValidationService;
+
     }
 
     // TODO: add security
@@ -66,6 +75,7 @@ class EtablissementController extends AbstractController
         return $this->render('etablissement/etablissement.html.twig', [
             'message' => $message['page']->getMessage(),
             'button' => $message['button']->getMessage(),
+            'usecase' => $usecase,
         ]);
     }
 
@@ -102,7 +112,16 @@ class EtablissementController extends AbstractController
                 $data['depot_mr005']['ipe'] = $ipe;
                 $data['depot_mr005']['finess'] = $finess;
                 $data['depot_mr005']['raisonSociale'] = $raisonSocial;
-                // stock in s3 database
+                // TODO: save file ?
+
+                // TODO: stock in s3 database
+
+
+                $depotMr005Validation = $this->depotMr005ValidationMapper->map(
+                    $data['depot_mr005'],
+                    $file['depot_mr005']['fileType']
+                );
+                $this->depotMr005ValidationService->save($depotMr005Validation);
 
                 $emailResonsable = $data['depot_mr005']['courriel'];
                 try {
@@ -128,5 +147,28 @@ class EtablissementController extends AbstractController
         ]);
     }
 
-    // create route avec formulaire en lecture seul
+    #[Route('/show_mr005/{recepice}', name: 'show_mr005', methods: ['GET'])]
+    public function showMr005(int $recepice): Response
+    {
+        try {
+            $message = $this->applicationMessageService->getMessageByUseCase('message_depot_recepice');
+        } catch (Exception $exception) {
+            $response = $this->render('errors.html.twig', [
+                'exception' => $exception,
+            ]);
+
+            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            return $response;
+        }
+
+        $ipe = '000000001'; // TODO: get from token
+        $depotValidation = $this->depotMr005ValidationService->getDepotMr005ValidationByRecepice($recepice);
+        $form = $this->createForm(ShowMr005Type::class, $depotValidation);
+
+        return $this->render('etablissement/showRecepice.html.twig', [
+            'message' => $message->getMessage(),
+            'form' => $form->createView(),
+        ]);
+    }
 }
