@@ -106,7 +106,7 @@ class DepotMr005Type extends AbstractType
                     new Email(['message' => 'Le courriel est invalide.']),
                 ],
             ])
-            ->add('numeroRecepice', IntegerType::class, [
+            ->add('numeroRecepice', TextType::class, [
                 'label' => 'Numéro de récépissé: ',
                 'attr' => [
                     'class' => 'form-control',

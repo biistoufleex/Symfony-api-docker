@@ -7,7 +7,7 @@ use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Throwable;
 
-class EtablissementServiceTest extends KernelTestCase
+class ApiEtablissementServiceTest extends KernelTestCase
 {
     public function testGetFinessDomainXml(): void
     {

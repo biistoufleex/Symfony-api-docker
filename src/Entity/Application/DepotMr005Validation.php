@@ -47,6 +47,8 @@ class DepotMr005Validation
     #[ORM\Column(length: 255)]
     private ?string $filePath = null;
 
+    // TODO: add validate boolean ?
+
     public function  __construct(array $formData, UploadedFile $uploadedFile)
     {
         $this->ipe = $formData['ipe'];
@@ -64,7 +66,7 @@ class DepotMr005Validation
                         . '-'
                         . $formData['dateAtribution']['day'];
         $this->dateAttribution = $dateString;
-        $this->filePath = $uploadedFile->getRealPath();
+        $this->filePath = $uploadedFile->getClientOriginalName();
     }
     public function getId(): ?int
     {
