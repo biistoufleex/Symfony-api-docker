@@ -14,6 +14,8 @@ php bin/console --env=test doctrine:fixtures:load
 
 docker run -d -p 1080:1080 -p 1025:1025 --name mailcatcher schickling/mailcatcher
 
+lancer le server s3 en developement dans le dossier docker/aws
+
 ````
 # Utils
 ```
