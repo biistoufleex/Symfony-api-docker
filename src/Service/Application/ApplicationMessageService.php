@@ -34,6 +34,16 @@ class ApplicationMessageService
         return $applicationMessage;
     }
 
+    public  function getStringMessageByUseCase(string $useCase) : string
+    {
+        $applicationMessage = $this->applicationMessageRepository->findOneBy(['usecase' => $useCase]);
+        if ($applicationMessage === null) {
+            $this->logger->error(MessageConstants::PROBLEME_AUCUN_MESSAGE_USECASE . $useCase, ['useCase' => $useCase]);
+            return MessageConstants::PROBLEME_RECUPERATION_MESSAGE;
+        }
+        return $applicationMessage->getMessage();
+    }
+
     /**
      * @throws Exception
      */

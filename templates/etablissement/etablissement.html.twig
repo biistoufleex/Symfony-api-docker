@@ -14,7 +14,7 @@
     {% if usecase == "recepice_not_found" %}
         <a href="{{ path('app_etablissementdepot_mr005') }}" class="btn btn-primary">{{button | raw}}</a>
     {% else %}
-        <a href="{{ path('app_etablissementshow_mr005') }}" class="btn btn-primary">{{button | raw}}</a>
+        <a href="{{ path('app_etablissementshow_mr005', {'recepice' : recepice}) }}" class="btn btn-primary">{{button | raw}}</a>
     {% endif %}
 
 </div>

@@ -47,7 +47,8 @@ class DepotMr005Validation
     #[ORM\Column(length: 255)]
     private ?string $filePath = null;
 
-    // TODO: add validate boolean ?
+    #[ORM\OneToOne(mappedBy: 'depotMr005Validation', cascade: ['persist', 'remove'])]
+    private ?DepotMr005 $depotMr005 = null;
 
     public function  __construct(array $formData, UploadedFile $uploadedFile)
     {
@@ -60,14 +61,17 @@ class DepotMr005Validation
         $this->fonction = $formData['fonction'];
         $this->courriel = $formData['courriel'];
         $this->numeroRecepice = $formData['numeroRecepice'];
+
+        # ajout de l'heure dans la date
         $dateString = $formData['dateAtribution']['year']
-                        . '-'
-                        . $formData['dateAtribution']['month']
-                        . '-'
-                        . $formData['dateAtribution']['day'];
+            . '-' . $formData['dateAtribution']['month']
+            . '-' . $formData['dateAtribution']['day'];
+        $dateString .= ' ' . date('H:i:s');
         $this->dateAttribution = $dateString;
+
         $this->filePath = $uploadedFile->getClientOriginalName();
     }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -201,6 +205,28 @@ class DepotMr005Validation
     public function setFilePath(string $filePath): static
     {
         $this->filePath = $filePath;
+
+        return $this;
+    }
+
+    public function getDepotMr005(): ?DepotMr005
+    {
+        return $this->depotMr005;
+    }
+
+    public function setDepotMr005(?DepotMr005 $depotMr005): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($depotMr005 === null && $this->depotMr005 !== null) {
+            $this->depotMr005->setDepotMr005Validation(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($depotMr005 !== null && $depotMr005->getDepotMr005Validation() !== $this) {
+            $depotMr005->setDepotMr005Validation($this);
+        }
+
+        $this->depotMr005 = $depotMr005;
 
         return $this;
     }

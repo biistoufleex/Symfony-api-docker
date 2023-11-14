@@ -6,7 +6,6 @@ use App\constants\MessageConstants;
 use App\Form\Entity\DepotMr005Form;
 use App\Form\Type\DepotMr005Type;
 use App\Form\Type\ShowMr005Type;
-use App\Mapper\Application\DepotMr005ValidationMapper;
 use App\Service\Application\AmazonS3Service;
 use App\Service\Application\ApplicationMessageService;
 use App\Service\Application\DepotMr005Service;
@@ -26,10 +25,7 @@ class EtablissementController extends AbstractController
     private DepotMr005Service $depotMr005Service;
     private EmailService $emailService;
     private LoggerInterface $logger;
-    private String $emailApplication;
-    private DepotMr005ValidationMapper $depotMr005ValidationMapper;
     private DepotMr005ValidationService $depotMr005ValidationService;
-
     private AmazonS3Service $amazonS3Service;
 
     public function __construct(
@@ -37,21 +33,16 @@ class EtablissementController extends AbstractController
         ApplicationMessageService  $applicationMessageService,
         DepotMr005Service          $depotMr005Service,
         EmailService               $emailService,
-        String                     $emailApplication,
-        DepotMr005ValidationMapper $depotMr005ValidationMapper,
         DepotMr005ValidationService $depotMr005ValidationService,
-        AmazonS3Service             $amazonS3Service
+        AmazonS3Service $amazonS3Service,
     )
     {
         $this->logger = $logger;
         $this->applicationMessageService = $applicationMessageService;
         $this->depotMr005Service = $depotMr005Service;
         $this->emailService = $emailService;
-        $this->emailApplication = $emailApplication;
-        $this->depotMr005ValidationMapper = $depotMr005ValidationMapper;
         $this->depotMr005ValidationService = $depotMr005ValidationService;
         $this->amazonS3Service = $amazonS3Service;
-
     }
 
     // TODO: add security
@@ -60,7 +51,7 @@ class EtablissementController extends AbstractController
     {
         $ipe = '000000001'; // TODO: get from token
 
-        $receipe = $this->depotMr005Service->getRecepiceByIpe($ipe);
+        $receipe = $this->depotMr005Service->getOneRecepiceByIpe($ipe);
 
         $usecase = $receipe ? 'recepice_found' : 'recepice_not_found';
 
@@ -74,21 +65,27 @@ class EtablissementController extends AbstractController
             ];
         }
 
+        $receipe = $receipe?->getDepotMr005Validation()->getNumeroRecepice();
         return $this->render('etablissement/etablissement.html.twig', [
             'message' => $message['page']->getMessage(),
             'button' => $message['button']->getMessage(),
             'usecase' => $usecase,
+            'recepice' => $receipe,
         ]);
     }
 
     #[Route('/depot_mr005', name: 'depot_mr005', methods: ['GET', 'POST'])]
     public function depotMr005(Request $request): Response
     {
+
+        // TODO: si une demande en cour set readonly
+
+
         $ipe = '000000001'; // TODO: get from token
         $finess = '000000111'; // TODO: get from token
         $raisonSocial = 'test'; // TODO: get from token
 
-        $message = $this->getMessageByUseCase('message_depot_recepice');
+        $message = $this->applicationMessageService->getStringMessageByUseCase('message_depot_recepice');
 
         $depotMr005 = new DepotMr005Form();
         $form = $this->createForm(DepotMr005Type::class, $depotMr005);
@@ -106,11 +103,14 @@ class EtablissementController extends AbstractController
                 $data['depot_mr005']['finess'] = $finess;
                 $data['depot_mr005']['raisonSociale'] = $raisonSocial;
 
-                $this->saveFileInS3($data, $file);
+                $this->amazonS3Service->saveFileInS3($data, $file);
 
-                $this->saveFormData($data, $file);
+                $formData = $this->depotMr005ValidationService->saveFormData($data, $file);
 
-                $this->sendEmail($data);
+                $idPlage = '123123123'; // TODO: get from token
+                $this->depotMr005Service->saveDepot($formData, $idPlage);
+
+                $this->emailService->sendEmailTo($data['depot_mr005']['courriel']);
 
                 // TODO: redirect ?
                 return $this->redirect('/etablissement/show_mr005/' . $data['depot_mr005']['numeroRecepice']);
@@ -129,10 +129,7 @@ class EtablissementController extends AbstractController
     #[Route('/show_mr005/{recepice}', name: 'show_mr005', methods: ['GET'])]
     public function showMr005(string $recepice): Response
     {
-        $message = $this->getMessageByUseCase('message_depot_recepice');
-
-        $ipe = '000000001'; // TODO: get from token
-
+        $message = $this->applicationMessageService->getStringMessageByUseCase('message_depot_recepice');
         $depotValidation = $this->depotMr005ValidationService->getDepotMr005ValidationByRecepice($recepice);
         $form = $this->createForm(ShowMr005Type::class, $depotValidation);
 
@@ -140,58 +137,5 @@ class EtablissementController extends AbstractController
             'message' => $message,
             'form' => $form->createView(),
         ]);
-    }
-
-    private function saveFileInS3(array $formData, array $fileData): void
-    {
-        try {
-            $this->amazonS3Service->uploadFile(
-                $_ENV['AWS_BUCKET'],
-                $formData['depot_mr005']['numeroRecepice'] .
-                "-" .
-                $fileData['depot_mr005']['fileType']->getClientOriginalName(),
-                $fileData['depot_mr005']['fileType']->getPathname()
-            );
-        } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
-        }
-    }
-
-    private function saveFormData(array $formData, array $fileData): void
-    {
-        try {
-            $depotMr005Validation = $this->depotMr005ValidationMapper->map(
-                $formData['depot_mr005'],
-                $fileData['depot_mr005']['fileType']
-            );
-            $this->depotMr005ValidationService->save($depotMr005Validation);
-        } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
-        }
-    }
-
-    private function sendEmail(array $formData): void
-    {
-        $emailResonsable = $formData['depot_mr005']['courriel'];
-        try {
-            $this->emailService->sendEmail(
-                $this->emailApplication,
-                $emailResonsable,
-                MessageConstants::EMAIL_SUBJECT_DEPOT,
-                MessageConstants::EMAIL_BODY_DEPOT
-            );
-        } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
-        }
-    }
-
-    private function getMessageByUseCase(string $usecase): string
-    {
-        try {
-            return $this->applicationMessageService->getMessageByUseCase($usecase)->getMessage();
-        } catch (Exception $exception) {
-            $this->logger->error($exception->getMessage());
-            return MessageConstants::PROBLEME_RECUPERATION_MESSAGE;
-        }
     }
 }

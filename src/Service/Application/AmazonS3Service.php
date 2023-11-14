@@ -4,14 +4,17 @@ namespace App\Service\Application;
 
 use Aws\S3\S3Client;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 class AmazonS3Service
 {
     private S3Client $s3Client;
+    private LoggerInterface $logger;
 
-    public function __construct(S3Client $s3Client)
+    public function __construct(S3Client $s3Client, LoggerInterface $logger)
     {
         $this->s3Client = $s3Client;
+        $this->logger = $logger;
     }
 
     /**
@@ -79,5 +82,20 @@ class AmazonS3Service
         }
 
         return $result->toArray();
+    }
+
+    public function saveFileInS3(array $formData, array $fileData): void
+    {
+        try {
+            $this->uploadFile(
+                $_ENV['AWS_BUCKET'],
+                $formData['depot_mr005']['numeroRecepice'] .
+                "-" .
+                $fileData['depot_mr005']['fileType']->getClientOriginalName(),
+                $fileData['depot_mr005']['fileType']->getPathname()
+            );
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 }

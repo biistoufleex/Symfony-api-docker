@@ -42,6 +42,12 @@ class DepotMr005
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?DateTimeInterface $dateSoumission = null;
 
+    #[ORM\Column]
+    private ?bool $validated = false;
+
+    #[ORM\OneToOne(inversedBy: 'depotMr005', cascade: ['persist', 'remove'])]
+    private ?DepotMr005Validation $depotMr005Validation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -115,6 +121,30 @@ class DepotMr005
     public function setDateSoumission(DateTimeInterface $dateSoumission): static
     {
         $this->dateSoumission = $dateSoumission;
+
+        return $this;
+    }
+
+    public function isValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(bool $validated): static
+    {
+        $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function getDepotMr005Validation(): ?DepotMr005Validation
+    {
+        return $this->depotMr005Validation;
+    }
+
+    public function setDepotMr005Validation(?DepotMr005Validation $depotMr005Validation): static
+    {
+        $this->depotMr005Validation = $depotMr005Validation;
 
         return $this;
     }

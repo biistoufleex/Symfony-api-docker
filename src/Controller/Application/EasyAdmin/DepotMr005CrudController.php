@@ -5,6 +5,7 @@ namespace App\Controller\Application\EasyAdmin;
 use App\Controller\Application\EasyAdmin\base\AbstractCrudControllerTrait;
 use App\Entity\Application\DepotMr005;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -28,6 +29,7 @@ class DepotMr005CrudController extends AbstractCrudController
             TextField::new('finess'),
             TextField::new('raisonSocial'),
             DateField::new('dateSoumission'),
+            BooleanField::new('validated')
         ];
     }
 }

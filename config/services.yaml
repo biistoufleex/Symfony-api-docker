@@ -36,7 +36,7 @@ services:
             $getEtablissementInfoUrl: '%app.getEtablissementInfoUrl%'
         public: false
 
-    App\Controller\Application\EtablissementController:
+    App\Service\Application\EmailService:
         arguments:
             $emailApplication: '%app.emailApplication%'
         public: false
