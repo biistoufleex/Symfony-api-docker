@@ -16,8 +16,8 @@ class DepotMr005Form
     protected string $fonction;
     protected string $courriel;
     protected string $numeroRecepice;
-    protected DateTimeInterface $dateAtribution;
-    protected FileType $fileType;
+    protected DateTimeInterface $dateAttribution;
+    protected FileType $filePath;
 
     public function getIpe(): string
     {
@@ -127,26 +127,26 @@ class DepotMr005Form
         return $this;
     }
 
-    public function getDateAtribution(): DateTimeInterface
+    public function getDateAttribution(): DateTimeInterface
     {
-        return $this->dateAtribution;
+        return $this->dateAttribution;
     }
 
-    public function setDateAtribution(DateTimeInterface $dateAtribution): self
+    public function setDateAttribution(DateTimeInterface $dateAttribution): self
     {
-        $this->dateAtribution = $dateAtribution;
+        $this->dateAttribution = $dateAttribution;
 
         return $this;
     }
 
-    public function getFileType(): FileType
+    public function getFilePath(): FileType
     {
-        return $this->fileType;
+        return $this->filePath;
     }
 
-    public function setFileType(FileType $fileType): self
+    public function setFilePath(FileType $filePath): self
     {
-        $this->fileType = $fileType;
+        $this->filePath = $filePath;
 
         return $this;
     }

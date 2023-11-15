@@ -2,14 +2,13 @@
 
 namespace App\Form\Type;
 
-use App\Service\Application\DepotMr005ValidationService;
+use App\Service\Application\DepotMr005FormulaireService;
 use App\Validator\Constraints\RecepiceExist;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,15 +18,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DepotMr005Type extends AbstractType
 {
-    private DepotMr005ValidationService $depotMr005ValidationService;
+    private DepotMr005FormulaireService $depotMr005FormulaireService;
 
-    public function __construct(DepotMr005ValidationService $depotMr005ValidationService)
+    public function __construct(DepotMr005FormulaireService $depotMr005FormulaireService)
     {
-        $this->depotMr005ValidationService = $depotMr005ValidationService;
+        $this->depotMr005FormulaireService = $depotMr005FormulaireService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+//        dd($options);
         $builder
             ->add('ipe', TextType::class, [
                 'label' => 'IPE: ',
@@ -113,28 +113,41 @@ class DepotMr005Type extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de récépissé est obligatoire.']),
-                    new RecepiceExist($this->depotMr005ValidationService),
+                    new RecepiceExist($this->depotMr005FormulaireService),
                 ],
-            ])
-            ->add('dateAtribution', DateType::class, [
-                'label' => 'Date d\'attribution: ',
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Date d\'attribution',
-                    'data-format' => 'dd-mm-yyyy',
-                ],
-            ])
-            ->add('fileType', FileType::class, [
+            ]);
+
+        if (!$options['disabled']) {
+            $builder->add('filePath', FileType::class, [
                 'label' => 'Transmission du récépissé: ',
                 'mapped' => true,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'cliquer pour déposer votre récépissé de MR005',
                 ],
-            ])
-            ->add('send', SubmitType::class, [
+            ])->add('dateAttribution', DateType::class, [
+                'label' => 'Date d\'attribution: ',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Date d\'attribution',
+                    'data-format' => 'dd-mm-yyyy',
+                ],
+            ])->add('send', SubmitType::class, [
                 'label' => 'Envoyer la demande de validation',
-            ])
-        ;
+            ]);
+        } else {
+            $builder->add('dateAttribution', TextType::class, [
+                'label' => 'Date d\'attribution: ',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+            ])->add('filePath', TextType::class, [
+                'label' => 'Transmission du récépissé: ',
+                'mapped' => true,
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+            ]);
+        }
     }
 }

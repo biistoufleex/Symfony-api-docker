@@ -37,7 +37,7 @@ class DepotMr005
 
     #[ORM\Column(length: 100)]
     #[Assert\Length(max: 100)]
-    private ?string $raisonSocial = null;
+    private ?string $raisonSociale = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?DateTimeInterface $dateSoumission = null;
@@ -46,7 +46,7 @@ class DepotMr005
     private ?bool $validated = false;
 
     #[ORM\OneToOne(inversedBy: 'depotMr005', cascade: ['persist', 'remove'])]
-    private ?DepotMr005Validation $depotMr005Validation = null;
+    private ?DepotMr005Formulaire $depotMr005Formulaire = null;
 
     public function getId(): ?int
     {
@@ -101,14 +101,14 @@ class DepotMr005
         return $this;
     }
 
-    public function getRaisonSocial(): ?string
+    public function getRaisonSociale(): ?string
     {
-        return $this->raisonSocial;
+        return $this->raisonSociale;
     }
 
-    public function setRaisonSocial(string $raisonSocial): static
+    public function setRaisonSociale(string $raisonSociale): static
     {
-        $this->raisonSocial = $raisonSocial;
+        $this->raisonSociale = $raisonSociale;
 
         return $this;
     }
@@ -137,14 +137,14 @@ class DepotMr005
         return $this;
     }
 
-    public function getDepotMr005Validation(): ?DepotMr005Validation
+    public function getDepotMr005Formulaire(): ?DepotMr005Formulaire
     {
-        return $this->depotMr005Validation;
+        return $this->depotMr005Formulaire;
     }
 
-    public function setDepotMr005Validation(?DepotMr005Validation $depotMr005Validation): static
+    public function setDepotMr005Formulaire(?DepotMr005Formulaire $depotMr005Formulaire): static
     {
-        $this->depotMr005Validation = $depotMr005Validation;
+        $this->depotMr005Formulaire = $depotMr005Formulaire;
 
         return $this;
     }

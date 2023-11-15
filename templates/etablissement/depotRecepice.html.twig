@@ -14,6 +14,9 @@
                 }
             }) }}
 
+            {% if readonly %}
+                <fieldset disabled="disabled">
+            {% endif %}
             <div class="d-inline-block w-auto align-middle">
                 <div class="row p-3 border" style="background-color: #DADADA">
                     <h4 class="">L’ORGANISME DEMANDEUR</h4>
@@ -124,30 +127,37 @@
                         </div>
                     </div>
                     <div class="col-4 border">
-                        {{ form_label(form.dateAtribution) }}
+                        {{ form_label(form.dateAttribution) }}
                     </div>
                     <div class="col-8 px-0">
-                        {{ form_widget(form.dateAtribution) }}
+                        {{ form_widget(form.dateAttribution) }}
                         <div class="invalid-tooltip">
-                            {{ form_errors(form.dateAtribution) }}
+                            {{ form_errors(form.dateAttribution) }}
                         </div>
                     </div>
                     <div class="col-4 border">
-                        {{ form_label(form.fileType) }}
+                        {{ form_label(form.filePath) }}
                     </div>
                     <div class="col-8 px-0">
-                        {{ form_widget(form.fileType) }}
+                        {{ form_widget(form.filePath) }}
                         <div class="invalid-tooltip">
-                            {{ form_errors(form.fileType) }}
+                            {{ form_errors(form.filePath) }}
                         </div>
                     </div>
                 </div>
+                {% if readonly == false %}
                 {{ form_row(form.send, {
                     attr: {
                         'class': 'btn btn-primary mt-3'
                     }
                 }) }}
+                {% endif %}
             </div>
+
+            {% if readonly %}
+                </fieldset>
+            {% endif %}
+
             {{ form_end(form) }}
         </div>
     </div>

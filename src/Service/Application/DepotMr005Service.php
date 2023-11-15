@@ -3,7 +3,7 @@
 namespace App\Service\Application;
 
 use App\Entity\Application\DepotMr005;
-use App\Entity\Application\DepotMr005Validation;
+use App\Entity\Application\DepotMr005Formulaire;
 use App\Mapper\Application\DepotMr005Mapper;
 use App\Repository\Application\DepotMr005Repository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +29,10 @@ class DepotMr005Service
         $this->depotMr005Mapper = $depotMr005Mapper;
     }
 
+    /**
+     * @param string $ipe
+     * @return array<DepotMr005>|null
+     */
     public function getRecepiceByIpe(string $ipe) : ?array
     {
         $this->logger->info('getRecepiceByIpe');
@@ -41,6 +45,10 @@ class DepotMr005Service
         return $this->depotMr005Repository->findOneBy(['ipe' => $ipe]);
     }
 
+    /**
+     * @param string $finess
+     * @return array<DepotMr005>|null
+     */
     public function getRecepiceByFiness(string $finess) : ?array
     {
         $this->logger->info('getRecepiceByFiness');
@@ -53,10 +61,10 @@ class DepotMr005Service
         $this->entityManager->flush();
     }
 
-    public function saveDepot(DepotMr005Validation $depotMr005Validation, string $idPlage): void
+    public function saveDepot(DepotMr005Formulaire $depotMr005Formulaire, string $idPlage): void
     {
         try {
-            $depot = $this->depotMr005Mapper->mapFormDepot($depotMr005Validation, $idPlage);
+            $depot = $this->depotMr005Mapper->mapFormDepot($depotMr005Formulaire, $idPlage);
             $this->save($depot);
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());

@@ -33,3 +33,7 @@ storage-db/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> minio ###
+/.docker/aws/minio/*
+/.docker/aws/minio/.*

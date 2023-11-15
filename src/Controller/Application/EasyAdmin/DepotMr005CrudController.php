@@ -27,7 +27,7 @@ class DepotMr005CrudController extends AbstractCrudController
             TextField::new('courriel'),
             TextField::new('ipe')->setMaxLength(9),
             TextField::new('finess'),
-            TextField::new('raisonSocial'),
+            TextField::new('raisonSociale'),
             DateField::new('dateSoumission'),
             BooleanField::new('validated')
         ];

@@ -55,7 +55,7 @@ class OrganisationAutorisationFixtures extends Fixture
             $organisationAutorisation = new OrganisationAutorisation();
             $organisationAutorisation->setIdentifiantOrganisationPlage($row['identifiant_organisation_plage']);
             $organisationAutorisation->setDateDebut(new DateTime($row['date_debut']));
-            $organisationAutorisation->setDateFin($row['date_fin'] ? new DateTime($row['date_fin']) : null);
+            $organisationAutorisation->setDateFin($row['date_fin']);
             $organisationAutorisation->setPerimetre($row['perimetre']);
             $organisationAutorisation->setTypeAutorisation($row['type_autorisation']);
             $manager->persist($organisationAutorisation);

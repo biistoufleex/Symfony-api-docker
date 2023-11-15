@@ -8,6 +8,11 @@ use Psr\Log\LoggerInterface;
 
 class AmazonS3Service
 {
+    private const DEPOT_MR_005 = 'depot_mr005';
+    private const FILE_PATH = 'filePath';
+    private const NUMERO_RECEPICE = 'numeroRecepice';
+    private const BUCKET = 'Bucket';
+    private const KEY = 'Key';
     private S3Client $s3Client;
     private LoggerInterface $logger;
 
@@ -25,8 +30,8 @@ class AmazonS3Service
         try {
             $this->s3Client->putObject(
                 [
-                    'Bucket' => $bucket,
-                    'Key' => $key,
+                    self::BUCKET => $bucket,
+                    self::KEY => $key,
                     'Body' => fopen($filePath, 'r'),
                 ]
             );
@@ -43,8 +48,8 @@ class AmazonS3Service
         try {
             $this->s3Client->deleteObject(
                 [
-                    'Bucket' => $bucket,
-                    'Key' => $key,
+                    self::BUCKET => $bucket,
+                    self::KEY => $key,
                 ]
             );
         } catch (Exception $e) {
@@ -53,6 +58,7 @@ class AmazonS3Service
     }
 
     /**
+     * @return array<string>
      * @throws Exception
      */
     public function listFiles(string $bucket): array
@@ -60,7 +66,7 @@ class AmazonS3Service
         try {
             $result = $this->s3Client->listObjects(
                 [
-                    'Bucket' => $bucket,
+                    self::BUCKET => $bucket,
                 ]
             );
         } catch (Exception $e) {
@@ -72,6 +78,7 @@ class AmazonS3Service
 
     /**
      * @throws Exception
+     * @return array<string>
      */
     public function listBucket(): array
     {
@@ -84,15 +91,21 @@ class AmazonS3Service
         return $result->toArray();
     }
 
+    /**
+     * @param array<string>|array<array<string>> $formData
+     * @param array<string>|array<array<string>> $fileData
+     * @return void
+     */
     public function saveFileInS3(array $formData, array $fileData): void
     {
+        // test array value
         try {
             $this->uploadFile(
                 $_ENV['AWS_BUCKET'],
-                $formData['depot_mr005']['numeroRecepice'] .
+                $formData[self::DEPOT_MR_005][self::NUMERO_RECEPICE] .
                 "-" .
-                $fileData['depot_mr005']['fileType']->getClientOriginalName(),
-                $fileData['depot_mr005']['fileType']->getPathname()
+                $fileData[self::DEPOT_MR_005][self::FILE_PATH]->getClientOriginalName(),
+                $fileData[self::DEPOT_MR_005][self::FILE_PATH]->getPathname()
             );
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());

@@ -28,3 +28,11 @@ php bin/phpunit
 docker-compose up -d
 docker compose exec php bash
 ```
+
+# Minio
+```
+docker-compose -f docker/aws/docker-compose.yml up -d
+ce log avec les logs du docker compose
+cree un bucket 'scansante'
+cree des access keys et les mettre dans le .env.local
+```

@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  mailcatcher:
+    image: schickling/mailcatcher
+    restart: always
+    ports:
+      - "1080:1080"
+    environment:
+      - MAILCATCHER_SMTP_PORT=1080
+      - MAILCATCHER_HTTP_PORT=1025

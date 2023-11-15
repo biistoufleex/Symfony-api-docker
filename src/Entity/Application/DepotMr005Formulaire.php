@@ -2,13 +2,14 @@
 
 namespace App\Entity\Application;
 
-use App\Repository\Application\DepotMr005ValidationRepository;
+use App\Repository\Application\DepotMr005FormulaireRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-#[ORM\Entity(repositoryClass: DepotMr005ValidationRepository::class)]
-class DepotMr005Validation
+#[ORM\Entity(repositoryClass: DepotMr005FormulaireRepository::class)]
+class DepotMr005Formulaire
 {
+    private const DATE_ATTRIBUTION = 'dateAttribution';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,7 +22,7 @@ class DepotMr005Validation
     private ?string $finess = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $raisonSocial = null;
+    private ?string $raisonSociale = null;
 
     #[ORM\Column(length: 15)]
     private ?string $civilite = null;
@@ -47,14 +48,18 @@ class DepotMr005Validation
     #[ORM\Column(length: 255)]
     private ?string $filePath = null;
 
-    #[ORM\OneToOne(mappedBy: 'depotMr005Validation', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'depotMr005Formulaire', cascade: ['persist', 'remove'])]
     private ?DepotMr005 $depotMr005 = null;
 
+    /**
+     * @param array<string>|array<array<string>> $formData
+     * @param UploadedFile $uploadedFile
+     */
     public function  __construct(array $formData, UploadedFile $uploadedFile)
     {
         $this->ipe = $formData['ipe'];
         $this->finess = $formData['finess'];
-        $this->raisonSocial = $formData['raisonSociale'];
+        $this->raisonSociale = $formData['raisonSociale'];
         $this->civilite = $formData['civilite'];
         $this->nom = $formData['nom'];
         $this->prenom = $formData['prenom'];
@@ -63,9 +68,9 @@ class DepotMr005Validation
         $this->numeroRecepice = $formData['numeroRecepice'];
 
         # ajout de l'heure dans la date
-        $dateString = $formData['dateAtribution']['year']
-            . '-' . $formData['dateAtribution']['month']
-            . '-' . $formData['dateAtribution']['day'];
+        $dateString = $formData[self::DATE_ATTRIBUTION]['year']
+            . '-' . $formData[self::DATE_ATTRIBUTION]['month']
+            . '-' . $formData[self::DATE_ATTRIBUTION]['day'];
         $dateString .= ' ' . date('H:i:s');
         $this->dateAttribution = $dateString;
 
@@ -101,14 +106,14 @@ class DepotMr005Validation
         return $this;
     }
 
-    public function getRaisonSocial(): ?string
+    public function getRaisonSociale(): ?string
     {
-        return $this->raisonSocial;
+        return $this->raisonSociale;
     }
 
-    public function setRaisonSocial(string $raisonSocial): static
+    public function setRaisonSociale(string $raisonSociale): static
     {
-        $this->raisonSocial = $raisonSocial;
+        $this->raisonSociale = $raisonSociale;
 
         return $this;
     }
@@ -218,12 +223,12 @@ class DepotMr005Validation
     {
         // unset the owning side of the relation if necessary
         if ($depotMr005 === null && $this->depotMr005 !== null) {
-            $this->depotMr005->setDepotMr005Validation(null);
+            $this->depotMr005->setDepotMr005Formulaire(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($depotMr005 !== null && $depotMr005->getDepotMr005Validation() !== $this) {
-            $depotMr005->setDepotMr005Validation($this);
+        if ($depotMr005 !== null && $depotMr005->getDepotMr005Formulaire() !== $this) {
+            $depotMr005->setDepotMr005Formulaire($this);
         }
 
         $this->depotMr005 = $depotMr005;

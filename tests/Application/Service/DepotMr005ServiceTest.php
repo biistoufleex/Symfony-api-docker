@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class DepotMr005ServiceTest extends KernelTestCase
 {
 
-    public function testGetRecepiceByIpe()
+    public function testGetRecepiceByIpe(): void
     {
         $depotMr005Service = static::getContainer()->get(DepotMr005Service::class);
 
@@ -21,7 +21,7 @@ class DepotMr005ServiceTest extends KernelTestCase
         $this->assertEquals($ipe, $recepices[0]->getIpe());
     }
 
-    public function testGetRecepiceByFiness()
+    public function testGetRecepiceByFiness(): void
     {
         $depotMr005Service = static::getContainer()->get(DepotMr005Service::class);
 

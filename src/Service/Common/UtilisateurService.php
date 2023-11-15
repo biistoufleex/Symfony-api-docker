@@ -8,6 +8,7 @@ use App\Controller\Api\Http\Responses\Status;
 use App\Entity\Common\Utilisateur;
 use App\Mapper\Api\EtablissementMapper;
 use App\Mapper\Api\UtilisateurMapper;
+use App\Repository\Common\UtilisateurRepository;
 use App\Service\Api\ApiEtablissementService;
 use App\Service\Api\OrganisationAutorisationService;
 use App\Service\Api\RoleApplicationService;
@@ -114,13 +115,15 @@ class UtilisateurService
      *                            or null if there is an issue with the InfoService API communication.
      *
      * @throws Exception If there is a problem with the InfoService API communication or
+     * @throws TransportExceptionInterface
      *                   if the API returns an exception,
      *                   an exception is thrown, and the issue is logged with details.
      */
     public function getDevelXml(string $idUser): ?SimpleXMLElement
     {
-        // get entity from Api/Utilisateur.php
-        $plageXml = $this->entityManager->getRepository(Utilisateur::class)->getDevelPlageXml($idUser);
+        /** @var UtilisateurRepository $utilisateurRepository */
+        $utilisateurRepository = $this->entityManager->getRepository(Utilisateur::class);
+        $plageXml = $utilisateurRepository->getDevelPlageXml($idUser);
 
         if (!$plageXml) {
             $this->logger->error(MessageConstants::PROBLEME_COMMUNICATION_INFOSERVICE_USER, ['idUser' => $idUser]);

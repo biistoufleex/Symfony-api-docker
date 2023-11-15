@@ -18,12 +18,12 @@ class DepotMr005Fixtures extends Fixture
         $data = [
             ['idPlage' => 'QWERTYUIO', 'courriel' => 'billy@mail.fr',
                 'ipe' => 'QWERTYUIO', 'finess' => 'QWERTYUIO',
-                'raisonSocial' => 'Hopital de Paris',
+                'raisonSociale' => 'Hopital de Paris',
                 'dateSoumission' => '2021-01-01'
             ],
             ['idPlage' => 'ASDFHJKL', 'courriel' => 'bob@mail.fr',
                 'ipe' => 'ASDFHJKL', 'finess' => 'ASDFHJKL',
-                'raisonSocial' => 'Hopital de Marseille',
+                'raisonSociale' => 'Hopital de Marseille',
                 'dateSoumission' => '2022-01-13'
             ],
         ];
@@ -34,7 +34,7 @@ class DepotMr005Fixtures extends Fixture
             $recepice->setCourriel($row['courriel']);
             $recepice->setIpe($row['ipe']);
             $recepice->setFiness($row['finess']);
-            $recepice->setRaisonSocial($row['raisonSocial']);
+            $recepice->setRaisonSociale($row['raisonSociale']);
             $recepice->setDateSoumission(new DateTime($row['dateSoumission']));
             $manager->persist($recepice);
         }

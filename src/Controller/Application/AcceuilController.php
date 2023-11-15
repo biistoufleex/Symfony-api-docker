@@ -11,13 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/acceuil', name: 'app_acceuil')]
 class AcceuilController extends AbstractController
 {
-    private Authorisation $authorisation;
-
-    public function __construct(Authorisation $authorisation, )
-    {
-        $this->authorisation = $authorisation;
-    }
-
     #[Route('/', name: 'acceuil_index')]
     public function index(RequestStack $requestStack): Response
     {

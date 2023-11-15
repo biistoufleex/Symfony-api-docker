@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class ApplicationMessageServiceTest extends KernelTestCase
 {
 
-    public function testGetMessageByUseCase()
+    public function testGetMessageByUseCase(): void
     {
         $applicationMessageService = static::getContainer()->get(ApplicationMessageService::class);
 
@@ -22,7 +22,7 @@ class ApplicationMessageServiceTest extends KernelTestCase
         $this->assertEquals('Consulter son récépissé MR-005', $applicationMessage->getMessage());
     }
 
-    public function testGetMessageByUri()
+    public function testGetMessageByUri(): void
     {
         $applicationMessageService = static::getContainer()->get(ApplicationMessageService::class);
 
@@ -36,7 +36,7 @@ class ApplicationMessageServiceTest extends KernelTestCase
         $this->assertEquals('recepice_not_found', $applicationMessages[0]->getUsecase());
     }
 
-    public function testGetEtablissementPageMessage()
+    public function testGetEtablissementPageMessage(): void
     {
         $applicationMessageService = static::getContainer()->get(ApplicationMessageService::class);
 

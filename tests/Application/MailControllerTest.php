@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MailControllerTest extends WebTestCase
 {
-    public function testMailIsSentAndContentIsOk()
+    public function testMailIsSentAndContentIsOk(): void
     {
         $client = static::createClient();
         $client->request('GET', '/mail/send');

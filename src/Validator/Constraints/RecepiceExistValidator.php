@@ -18,7 +18,7 @@ class RecepiceExistValidator extends ConstraintValidator
             return;
         }
 
-        if (!$constraint->depotMr005ValidationService->existByRecepice($value)) {
+        if (!$constraint->depotMr005FormulaireService->existByRecepice($value)) {
             return;
         }
 

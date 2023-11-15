@@ -46,11 +46,12 @@ class ApplicationMessageService
 
     /**
      * @throws Exception
+     * @return array<string, mixed>
      */
     public function getMessageByUri(string $uri) : array
     {
         $message = $this->applicationMessageRepository->findBy(['uri' => $uri]);
-        if ($message === null) {
+        if (!$message) {
             $this->logger->error(MessageConstants::PROBLEME_AUCUN_MESSAGE_URI . $uri, ['uri' => $uri]);
             throw new Exception(MessageConstants::PROBLEME_AUCUN_MESSAGE_URI . $uri);
         }
@@ -59,6 +60,7 @@ class ApplicationMessageService
 
     /**
      * @throws Exception
+     * @return array<string, mixed>
      */
     public function getEtablissementPageMessage(string $buttonUseCase): array
     {

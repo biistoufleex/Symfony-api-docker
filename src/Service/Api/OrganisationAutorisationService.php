@@ -4,6 +4,7 @@ namespace App\Service\Api;
 
 use App\constants\MessageConstants;
 use App\Entity\Api\OrganisationAutorisation;
+use App\Repository\Api\OrganisationAutorisationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -28,7 +29,7 @@ class OrganisationAutorisationService
      * @param string $idOrganisation The ID of the organization for which to retrieve
      *                               active authorizations and permissions.
      *
-     * @return array<int, mixed>|null An array containing the active organization authorizations and permissions.
+     * @return array<string, mixed>|null An array containing the active organization authorizations and permissions.
      *
      * @throws Exception If there is an issue with retrieving the organization authorizations, an exception is thrown,
      *                    and the issue is logged with details.
@@ -38,6 +39,7 @@ class OrganisationAutorisationService
         $this->logger->debug('Get habilitations organisations', ['idOrganisation' => $idOrganisation]);
 
         try {
+            /** @var OrganisationAutorisationRepository $organisationAutorisationRepository */
             $organisationAutorisationRepository = $this->entityManager->getRepository(OrganisationAutorisation::class);
             $organisationAutorisation = $organisationAutorisationRepository->findActiveOrganisations($idOrganisation);
         } catch (Exception $e) {
