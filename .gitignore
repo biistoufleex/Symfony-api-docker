@@ -22,3 +22,18 @@ phpstan.neon
 ###< phpstan/phpstan ###
 
 storage-db/
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+###> minio ###
+/.docker/aws/minio/*
+/.docker/aws/minio/.*
