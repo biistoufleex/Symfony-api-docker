@@ -3,7 +3,6 @@
 namespace App\Entity\Api;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\Common\Utilisateur;
 use App\Repository\Api\OrganisationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

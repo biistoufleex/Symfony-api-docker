@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api\Repository;
 
-use App\Repository\Common\UtilisateurRepository;
+use App\Repository\Api\UtilisateurRepository;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

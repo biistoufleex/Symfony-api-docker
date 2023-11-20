@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Entity\Common;
+namespace App\Entity\Api;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\Api\Niveau;
-use App\Entity\Api\Organisation;
-use App\Repository\Common\UtilisateurRepository;
+use App\Repository\Api\UtilisateurRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Common;
+namespace App\Repository\Api;
 
-use App\Entity\Common\Utilisateur;
+use App\Entity\Api\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
