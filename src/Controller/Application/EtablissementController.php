@@ -13,6 +13,7 @@ use App\Service\Application\EmailService;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,8 +60,10 @@ class EtablissementController extends AbstractController
 
     // TODO: add security
     #[Route('/', name: 'etablissement_index')]
-    public function index(): Response
+    public function index(Security $security, Request $request): Response
     {
+        $user = $security->getUser();
+        dd($user,  $request->headers->get('Authorization')); // TODO: remove
         $ipe = self::IPE_FAKE; // TODO: get from token
 
         $receipe = $this->depotMr005Service->getOneRecepiceByIpe($ipe);
