@@ -3,9 +3,11 @@
 namespace App\Controller\Api\Http\Responses;
 
 use App\Dto\Api\UtilisateurDto;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class HabilitationReponse
+class HabilitationReponse implements UserInterface
 {
+    private array $roles = [];
 
     /**
      * @var array<string, mixed>
@@ -142,5 +144,20 @@ class HabilitationReponse
     public function __toString(): string
     {
         return $this->toJson();
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->info_utilisateur->id;
     }
 }

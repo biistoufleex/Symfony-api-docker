@@ -17,6 +17,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/etablissement', name: 'app_etablissement')]
 class EtablissementController extends AbstractController
@@ -58,12 +59,9 @@ class EtablissementController extends AbstractController
         $this->amazonS3Service = $amazonS3Service;
     }
 
-    // TODO: add security
     #[Route('/', name: 'etablissement_index')]
     public function index(Security $security, Request $request): Response
     {
-        $user = $security->getUser();
-        dd($user,  $request->headers->get('Authorization')); // TODO: remove
         $ipe = self::IPE_FAKE; // TODO: get from token
 
         $receipe = $this->depotMr005Service->getOneRecepiceByIpe($ipe);

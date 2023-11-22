@@ -27,10 +27,11 @@ class OAuthController extends AbstractController
     }
 
     #[Route('/logout', name: 'oauth_logout')]
-    public function logoutAction(Security $security, ClientRegistry $clientRegistry): RedirectResponse
+    public function logoutAction(Security $security): RedirectResponse
     {
-        // TODO: call https://connect-pasrel.atih.sante.fr/cas/oidc/logout?client_id=client_id&service=redirect_url
         $security->logout(false);
-        return $this->redirect("/");
+
+        // TODO: change ???
+        return $this->redirect("https://connect-pasrel.atih.sante.fr/cas/oidc/oidcLogout");
     }
 }

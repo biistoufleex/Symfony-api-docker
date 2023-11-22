@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class UtilisateurService
@@ -55,10 +56,10 @@ class UtilisateurService
      *
      * @param string $idUser The ID of the user for which to retrieve information and authorizations.
      *
-     * @return array<string, mixed> An array containing user information and authorizations.
-     * @throws Exception|TransportExceptionInterface
+     * @return UserInterface An array containing user information and authorizations.
+     * @throws TransportExceptionInterface
      */
-    public function getUserInfo(string $idUser): array
+    public function getUserInfo(string $idUser): UserInterface
     {
         $this->logger->info('Get user info from devel-plage-infoservice', ['idUser' => $idUser]);
 
@@ -100,7 +101,7 @@ class UtilisateurService
 
         $response->setRetour(Status::ok()->toArray());
 
-        return $response->toArray();
+        return $response;
     }
 
     /**

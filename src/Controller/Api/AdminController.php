@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Controller\Api\Http\Responses\HabilitationReponse;
 use App\Controller\Api\Http\Responses\Status;
 use App\Service\Common\UtilisateurService;
 use Exception;
@@ -34,7 +35,9 @@ class AdminController extends AbstractController
     public function getUserInfo(String $id): JsonResponse
     {
         try {
-            return $this->json($this->utilisateurService->getUserInfo($id));
+            /* @var $infoUser HabilitationReponse */
+            $infoUser = $this->utilisateurService->getUserInfo($id);
+            return $this->json($infoUser->toArray());
         } catch (Exception $e) {
             return $this->json([
                 'retour' => Status::error($e->getMessage())->toArray()
