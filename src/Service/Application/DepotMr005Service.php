@@ -70,4 +70,9 @@ class DepotMr005Service
             $this->logger->error($e->getMessage());
         }
     }
+
+    public function getRecepiceByStatus(bool $status): ?array
+    {
+        return $this->depotMr005Repository->findBy(['validated' => $status]);
+    }
 }
