@@ -14,8 +14,8 @@ class PlageProvider extends AbstractProvider
 
     public function getBaseAuthorizationUrl(): string
     {
-//        dd("qweqweqwe");
         return "https://connect-pasrel.atih.sante.fr/cas/oidc/authorize?client_id=gestauth&response_type=code&state=l0JieRgestauth&scope=profile_atih";
+//        return "https://devel-plage.atih.sante.fr/cas/oidc/authorize?client_id=gestauth&response_type=code&state=l0JieRgestauth&scope=profile_atih";
     }
 
     /**

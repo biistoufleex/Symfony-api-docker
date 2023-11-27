@@ -36,3 +36,8 @@ ce log avec les logs du docker compose
 cree un bucket 'scansante'
 cree des access keys et les mettre dans le .env.local
 ```
+
+# Encore
+```
+ encore dev --watch
+```

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>MR005 - Unvalidated</h1>
+        <div id="mr005_unvalidated">Loading...</div>
+
+
+        <h1>MR005 - Validated</h1>
+        <div id="mr005_validated">Loading...</div>
+    </div>
+
+    <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Datatables settings
+            $('#mr005_unvalidated').initDataTables({{ datatable_settings(datatable_unvalidated) }}, {
+                "searching": true,
+            })
+
+            // Datatables settings
+            $('#mr005_validated').initDataTables({{ datatable_settings(datatable_validated) }}, {
+                "searching": true,
+            })
+        });
+    </script>
+{% endblock %}

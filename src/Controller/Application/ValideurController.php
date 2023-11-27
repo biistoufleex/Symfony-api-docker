@@ -2,19 +2,20 @@
 
 namespace App\Controller\Application;
 
-use App\Service\Application\DepotMr005Service;
+use App\Service\Application\DataTableService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/valideur')]
 class ValideurController extends AbstractController
 {
-    private DepotMr005Service $depotMr005Service;
+    private DataTableService $validationService;
 
-    public function __construct(DepotMr005Service $depotMr005Service)
+    public function __construct(DataTableService $validationService)
     {
-        $this->depotMr005Service = $depotMr005Service;
+        $this->validationService = $validationService;
     }
 
     #[Route('', name: 'app_valideur')]
@@ -30,15 +31,21 @@ class ValideurController extends AbstractController
     }
 
     #[Route('/mr005', name: 'app_valideur_mr005')]
-    public function mr005(): Response
+    public function mr005(Request $request): Response
     {
-        $validatedDepots = $this->depotMr005Service->getRecepiceByStatus(true);
-        $unvalidatedDepots = $this->depotMr005Service->getRecepiceByStatus(false);
+        $tableUnvalidated = $this->validationService->createValidationDataTable(false);
+        if ($tableUnvalidated->handleRequest($request)->isCallback()) {
+            return $tableUnvalidated->getResponse();
+        }
 
-        dd($validatedDepots, $unvalidatedDepots);
+        $tableValidated = $this->validationService->createValidationDataTable(true);
+        if ($tableValidated->handleRequest($request)->isCallback()) {
+            return $tableValidated->getResponse();
+        }
 
-        return $this->render('valideur/mr005.html.twig', [
-            'controller_name' => 'ValideurController',
+        return $this->render('valideur/datatable_validation_mr005.html.twig', [
+            'datatable_unvalidated' => $tableUnvalidated,
+            'datatable_validated' => $tableValidated,
         ]);
     }
 
