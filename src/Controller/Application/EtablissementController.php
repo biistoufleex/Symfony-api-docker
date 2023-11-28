@@ -91,8 +91,8 @@ class EtablissementController extends AbstractController
     #[Route('/depot_mr005', name: self::DEPOT_MR_005, methods: ['GET', 'POST'])]
     public function depotMr005(Request $request): Response
     {
-
         $ipe = random_int(100000000, 999999999); // TODO: get from token
+//        $ipe = '000000001';
         $finess = '000000111'; // TODO: get from token
         $raisonSociale = 'test'; // TODO: get from token
 

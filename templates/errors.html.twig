@@ -3,7 +3,14 @@
 {% block title %}Error{% endblock %}
 
 {% block content %}
-
-    <h1>An error occurred: {{ exception.message }}</h1>
-
+    <h2>Une erreur est survenue:</h2>
+    <code>
+        {{ message | raw }}
+    </code>
+    <p>
+        retourner à la page d'accueil <a href="/etablissement">Acceuil</a>
+    </p>
+    <p>
+        retourner à la page de validation <a href="/valideur/mr005">Validation</a>
+    </p>
 {% endblock %}

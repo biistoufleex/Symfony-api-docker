@@ -3,7 +3,9 @@
 namespace App\Entity\Application;
 
 use App\Repository\Application\DepotMr005FormulaireRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: DepotMr005FormulaireRepository::class)]
@@ -50,6 +52,10 @@ class DepotMr005Formulaire
 
     #[ORM\OneToOne(mappedBy: 'depotMr005Formulaire', cascade: ['persist', 'remove'])]
     private ?DepotMr005 $depotMr005 = null;
+
+    // ajout des champ pour l'update des demande de depots
+    protected DateTimeInterface $dateAttributionValidation;
+    protected FileType $filePathValidation;
 
     /**
      * @param array<string>|array<array<string>> $formData
@@ -232,6 +238,30 @@ class DepotMr005Formulaire
         }
 
         $this->depotMr005 = $depotMr005;
+
+        return $this;
+    }
+
+    public function getDateAttributionValidation(): DateTimeInterface
+    {
+        return $this->dateAttributionValidation;
+    }
+
+    public function setDateAttributionValidation(DateTimeInterface $dateAttributionValidation): static
+    {
+        $this->dateAttributionValidation = $dateAttributionValidation;
+
+        return $this;
+    }
+
+    public function getfilePathValidation(): FileType
+    {
+        return $this->filePathValidation;
+    }
+
+    public function setfilePathValidation(FileType $filePathValidation): static
+    {
+        $this->filePathValidation = $filePathValidation;
 
         return $this;
     }

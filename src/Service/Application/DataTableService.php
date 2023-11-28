@@ -18,6 +18,7 @@ class DataTableService
     {
         $this->dataTableFactory = $dataTableFactory;
     }
+
     public function createValidationDataTable(bool $validated): DataTable
     {
         $dataTable = $this->dataTableFactory->create();
@@ -42,7 +43,7 @@ class DataTableService
                 'label' => 'Lien vers le formulaire',
                 'render' => function ($value, $context) {
                     // TODO: changer le lien
-                    return '<a href="/etablissement/depot_mr005/' . $context->getFiness() . '">Valider</a>';
+                    return '<a href="/valideur/mr005/demande/' . $context->getId() . '">Valider</a>';
                 },
             ])
             ->add('validated', TextColumn::class, [
@@ -60,12 +61,9 @@ class DataTableService
                         ->from(DepotMr005::class, 'e')
                         ->leftJoin('e.depotMr005Formulaire', 'c')
                         ->where('e.validated = ' . ($validated ? 'true' : 'false'))
-                        ->orderBy('e.dateSoumission', 'ASC')
-                    ;
+                        ->orderBy('e.dateSoumission', 'ASC');
                 },
-            ])
-
-        ;
+            ]);
         return $dataTable;
     }
 }

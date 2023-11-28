@@ -15,11 +15,13 @@ class AmazonS3Service
     private const KEY = 'Key';
     private S3Client $s3Client;
     private LoggerInterface $logger;
+    private string $projectDir;
 
-    public function __construct(S3Client $s3Client, LoggerInterface $logger)
+    public function __construct(S3Client $s3Client, LoggerInterface $logger, string $projectDir)
     {
         $this->s3Client = $s3Client;
         $this->logger = $logger;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -105,10 +107,23 @@ class AmazonS3Service
                 $formData[self::DEPOT_MR_005][self::NUMERO_RECEPICE] .
                 "-" .
                 $fileData[self::DEPOT_MR_005][self::FILE_PATH]->getClientOriginalName(),
-                $fileData[self::DEPOT_MR_005][self::FILE_PATH]->getPathname()
+                $fileData[self::DEPOT_MR_005][self::FILE_PATH]->getPathname(),
             );
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
         }
+    }
+
+    public function getFileFromS3(string $numeroRecepice, string $filename): ?string
+    {
+        $savedPath = $this->projectDir . '/public/tmp/' . $filename;
+        $this->s3Client->getObject(
+            [
+                self::BUCKET => $_ENV['AWS_BUCKET'],
+                self::KEY    => $numeroRecepice . "-" . $filename,
+                'SaveAs'     => $savedPath,
+            ]
+        );
+        return $savedPath;
     }
 }

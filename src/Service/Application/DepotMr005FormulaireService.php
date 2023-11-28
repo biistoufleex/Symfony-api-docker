@@ -51,6 +51,13 @@ class DepotMr005FormulaireService
             ->findOneBy([self::IPE => $recepice]);
     }
 
+    public function getDepotMr005FormulaireById(string $id): ?DepotMr005Formulaire
+    {
+        return $this->entityManager
+            ->getRepository(DepotMr005Formulaire::class)
+            ->find($id);
+    }
+
     public function existByRecepice(string $recepice): bool
     {
         return (bool)$this
