@@ -3,6 +3,7 @@
 namespace App\Service\Application;
 
 use App\Entity\Application\DepotMr005Formulaire;
+use App\Form\Entity\DepotMr005Form;
 use App\Mapper\Application\DepotMr005FormulaireMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -26,15 +27,9 @@ class DepotMr005FormulaireService
         DepotMr005FormulaireMapper $depotMr005FormulaireMapper
     )
     {
-        $this->logger                     = $logger;
-        $this->entityManager              = $entityManager;
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
         $this->depotMr005FormulaireMapper = $depotMr005FormulaireMapper;
-    }
-
-    public function save(DepotMr005Formulaire $depotMr005Formulaire): void
-    {
-        $this->entityManager->persist($depotMr005Formulaire);
-        $this->entityManager->flush();
     }
 
     public function getDepotMr005FormulaireByRecepice(string $recepice): ?DepotMr005Formulaire
@@ -85,5 +80,54 @@ class DepotMr005FormulaireService
         }
 
         return $depotMr005Formulaire;
+    }
+
+    public function save(DepotMr005Formulaire $depotMr005Formulaire): void
+    {
+        $this->entityManager->persist($depotMr005Formulaire);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param DepotMr005Formulaire $depotMr005Formulaire
+     * @param string|null $localFilePath
+     * @return DepotMr005Form
+     * @throws Exception
+     */
+    public function toDepotForm(DepotMr005Formulaire $depotMr005Formulaire, string $localFilePath = null): DepotMr005Form
+    {
+        return $this->depotMr005FormulaireMapper->toDepotForm($depotMr005Formulaire, $localFilePath);
+    }
+
+    /**
+     * @param DepotMr005Formulaire $depotMr005Formulaire
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $file
+     * @throws Exception
+     */
+    public function updateAndValidateDepotMr005Formulaire(
+        DepotMr005Formulaire $depotMr005Formulaire,
+        array                $data,
+        array                $file
+    ): void
+    {
+        $this->depotMr005FormulaireMapper->update($depotMr005Formulaire, $data, $file);
+
+        $depotMr005Formulaire->getDepotMr005()->setValidated(true);
+        $depotMr005Formulaire->getDepotMr005()->setDateSoumission(new \DateTime());
+
+        $this->save($depotMr005Formulaire);
+    }
+
+    public function unvalidDepotForm(string $numeroRecepice): void
+    {
+        $depotFormulaire = $this->entityManager
+            ->getRepository(DepotMr005Formulaire::class)
+            ->findOneBy([self::NUMERO_RECEPICE => $numeroRecepice]);
+
+        if ($depotFormulaire) {
+            $depotFormulaire->getDepotMr005()->setValidated(false);
+            $this->save($depotFormulaire);
+        }
     }
 }

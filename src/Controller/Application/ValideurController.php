@@ -2,6 +2,7 @@
 
 namespace App\Controller\Application;
 
+use App\Entity\Api\OrganisationAutorisation;
 use App\Form\Type\DepotMr005Type;
 use App\Service\Api\OrganisationAutorisationService;
 use App\Service\Application\AmazonS3Service;
@@ -10,6 +11,7 @@ use App\Service\Application\DataTableService;
 use App\Service\Application\DepotMr005FormulaireService;
 use App\Service\Application\DepotMr005Service;
 use App\Service\Application\EmailService;
+use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,14 +26,12 @@ class ValideurController extends AbstractController
     private const FINESS = 'finess';
     private const RAISON_SOCIALE = 'raisonSociale';
     private const FORM = 'form';
-    private const COURRIEL = 'courriel';
     private const READONLY = 'readonly';
-    const MESSAGE = 'message';
-
+    private const MESSAGE = 'message';
+    private const DEMANDE_NOT_FOUND = 'La demande n\'existe pas ou n\'est pas accessible.';
     private LoggerInterface $logger;
     private DataTableService $validationService;
     private DepotMr005FormulaireService $depotMr005FormulaireService;
-    private DepotMr005Service $depotMr005Service;
     private AmazonS3Service $amazonS3Service;
     private EmailService $emailService;
     private OrganisationAutorisationService $organisationAutorisationService;
@@ -46,16 +46,16 @@ class ValideurController extends AbstractController
         EmailService                    $emailService,
         OrganisationAutorisationService $organisationAutorisationService,
         ApplicationMessageService       $applicationMessageService,
-        )
+    )
     {
-        $this->logger                          = $logger;
-        $this->validationService               = $validationService;
-        $this->depotMr005FormulaireService     = $depotMr005FormulaireService;
-        $this->depotMr005Service               = $depotMr005Service;
-        $this->amazonS3Service                 = $amazonS3Service;
-        $this->emailService                    = $emailService;
+        $this->logger = $logger;
+        $this->validationService = $validationService;
+        $this->depotMr005FormulaireService = $depotMr005FormulaireService;
+        $this->depotMr005Service = $depotMr005Service;
+        $this->amazonS3Service = $amazonS3Service;
+        $this->emailService = $emailService;
         $this->organisationAutorisationService = $organisationAutorisationService;
-        $this->applicationMessageService       = $applicationMessageService;
+        $this->applicationMessageService = $applicationMessageService;
     }
 
     #[Route('', name: 'app_valideur')]
@@ -98,24 +98,79 @@ class ValideurController extends AbstractController
 
         $formData = $this->depotMr005FormulaireService->getDepotMr005FormulaireById($id_demande);
         if (!$formData) {
+            $this->logger->error(self::DEMANDE_NOT_FOUND);
             return $this->render('errors.html.twig',
-                ['message' => 'La demande n\'existe pas ou n\'est pas accessible.']);
+                [self::MESSAGE => self::DEMANDE_NOT_FOUND]);
         }
 
         try {
-            $filepath = $this->amazonS3Service->getFileFromS3($formData->getNumeroRecepice(), $formData->getFilePath());
+            $filepath = $this->amazonS3Service->downloadFile($formData->getNumeroRecepice(), $formData->getFilePath());
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
         }
 
-        $form = $this->createForm(DepotMr005Type::class, $formData, ['disabled' => true]);
+        $formtype = null;
+        try {
+            $formtype = $this->depotMr005FormulaireService->toDepotForm($formData);
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+            return $this->render('errors.html.twig',
+                [self::MESSAGE => self::DEMANDE_NOT_FOUND]);
+        }
 
-        // rajouter bouton de validation et de modification
-        $validationButton = true;
-        $modificationButton = true;
+        $disabled = $formData->getDepotMr005()->isValidated();
+        $form = $this->createForm(DepotMr005Type::class, $formtype,
+            ['disabled' => $disabled, 'method' => 'PUT']);
 
-        // rajouter un bouton en logo d'oeil qui fait aparaitre le fichiers dans une modale si il a ete correctement dl
-        // check filepath dans le twig
+        $buttonDowloadFile = [
+            'label' => 'Télécharger le fichier',
+            'filename' => basename($filepath),
+        ];
+
+        if ($request->isMethod("POST")) {
+            $allValues = $request->request->all();
+            $form->submit($allValues[$form->getName()]);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $file = $request->files->all();
+                $data = $request->request->all();
+
+                try {
+                    $this->depotMr005FormulaireService->updateAndValidateDepotMr005Formulaire($formData, $data, $file);
+                } catch (Exception $e) {
+                    $this->logger->error($e->getMessage());
+                    return $this->render('errors.html.twig',
+                        [self::MESSAGE => "Une erreur est survenue lors de la validation de la demande."]);
+                }
+
+                # update le fichier dans le S3
+                $this->amazonS3Service->deleteFileFromS3($formData->getNumeroRecepice(), basename($filepath));
+                $this->amazonS3Service->saveFileInS3($data, $file);
+
+                try {
+                    $this->emailService->sendEmail(
+                        $formData->getDepotMr005()->getCourriel(),
+                        "Validation demande MR005",
+                        "Votre demande de validation de récépissé MR005 a été validée.
+                         Votre numéro de récépissé est le suivant: " . $formData->getNumeroRecepice() . "."
+                    );
+                } catch (Exception $e) {
+                    $this->logger->error($e->getMessage());
+                }
+
+                try {
+                    $this->organisationAutorisationService->createOrganisationAutorisation($data);
+                } catch (Exception $e) {
+                    $this->logger->error($e->getMessage());
+                    $this->depotMr005FormulaireService->unvalidDepotForm($formData->getNumeroRecepice());
+                    return $this->render('errors.html.twig',
+                        [self::MESSAGE => "Une erreur est survenue lors de la création de l'habilitation, 
+                            veuillez revalider le récépissé. <a href='/valideur/mr005/demande/" . $id_demande . "'>Revalider</a>"
+                        ]);
+                }
+
+                return $this->redirect('/valideur/mr005/');
+            }
+        }
 
         return $this->render('etablissement/depotRecepice.html.twig', [
             self::MESSAGE => $message,
@@ -123,9 +178,8 @@ class ValideurController extends AbstractController
             self::IPE => $formData->getIpe(),
             self::FINESS => $formData->getFiness(),
             self::RAISON_SOCIALE => $formData->getRaisonSociale(),
-            self::READONLY => true,
+            self::READONLY => $disabled,
+            'button_dowload_file' => $buttonDowloadFile,
         ]);
     }
-
-    // TODO: rajouter route update
 }

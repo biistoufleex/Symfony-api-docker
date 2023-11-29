@@ -12,7 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
@@ -33,6 +35,7 @@ class DepotMr005Type extends AbstractType
                 'label' => 'IPE: ',
                 'attr' => [
                     'class' => 'form-control',
+                    'readonly' =>'readonly'
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'L\'ipe est obligatoire.']),
@@ -42,6 +45,7 @@ class DepotMr005Type extends AbstractType
                 'label' => 'N° FINESS: ',
                 'attr' => [
                     'class' => 'form-control',
+                    'readonly' =>'readonly'
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'La finess est obligatoire.']),
@@ -51,6 +55,7 @@ class DepotMr005Type extends AbstractType
                 'label' => 'Raison Sociale: ',
                 'attr' => [
                     'class' => 'form-control',
+                    'readonly' =>'readonly'
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'La raison sociale est obligatoire.']),
@@ -89,7 +94,7 @@ class DepotMr005Type extends AbstractType
             ])
             ->add('fonction', TextType::class, [
                 'label' => 'Fonction: ',
-                'attr' =>   [
+                'attr' => [
                     'class' => 'form-control',
                 ],
                 'constraints' => [
@@ -105,20 +110,22 @@ class DepotMr005Type extends AbstractType
                     new NotBlank(['message' => 'Le courriel est obligatoire.']),
                     new Email(['message' => 'Le courriel est invalide.']),
                 ],
-            ])
-            ->add('numeroRecepice', TextType::class, [
+            ]);
+
+            $numeroRecepiceConstraint = [
+                new NotBlank(['message' => 'Le numéro de récépissé est obligatoire.']),
+            ];
+            if ($options['method'] != 'PUT') {
+                $numeroRecepiceConstraint[] = new RecepiceExist($this->depotMr005FormulaireService);
+            }
+            $builder->add('numeroRecepice', TextType::class, [
                 'label' => 'Numéro de récépissé: ',
                 'attr' => [
                     'class' => 'form-control',
                 ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Le numéro de récépissé est obligatoire.']),
-                    new RecepiceExist($this->depotMr005FormulaireService),
-                ],
-            ]);
+                'constraints' => $numeroRecepiceConstraint,
 
-        if (!$options['disabled']) {
-            $builder->add('filePath', FileType::class, [
+            ])->add('filePath', FileType::class, [
                 'label' => 'Transmission du récépissé: ',
                 'mapped' => true,
                 'attr' => [
@@ -132,21 +139,14 @@ class DepotMr005Type extends AbstractType
                     'placeholder' => 'Date d\'attribution',
                     'data-format' => 'dd-mm-yyyy',
                 ],
-            ])->add('send', SubmitType::class, [
-                'label' => 'Envoyer la demande de validation',
             ]);
-        } else {
-            $builder->add('dateAttribution', TextType::class, [
-                'label' => 'Date d\'attribution: ',
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-            ])->add('filePath', TextType::class, [
-                'label' => 'Transmission du récépissé: ',
-                'mapped' => true,
-                'attr' => [
-                    'class' => 'form-control',
-                ],
+        if (!$options['disabled']) {
+            $label = 'Envoyer la demande de validation';
+            if ($options['method'] === 'PUT') {
+                $label = 'Modifier/Valider';
+            }
+            $builder->add('send', SubmitType::class, [
+                'label' => $label
             ]);
         }
     }

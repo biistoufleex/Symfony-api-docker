@@ -5,19 +5,26 @@ namespace App\Service\Api;
 use App\constants\MessageConstants;
 use App\Entity\Api\OrganisationAutorisation;
 use App\Repository\Api\OrganisationAutorisationRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 
 class OrganisationAutorisationService
 {
+    private const DEPOT_MR_005 = 'depot_mr005';
     private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;
+    private OrganisationAutorisationRepository $organisationAutorisationRepository;
 
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager)
+    public function __construct(
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager,
+        OrganisationAutorisationRepository $organisationAutorisationRepository)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
+        $this->organisationAutorisationRepository = $organisationAutorisationRepository;
     }
 
     /**
@@ -73,5 +80,34 @@ class OrganisationAutorisationService
             ];
         }
         return $habilitationsOrganisations;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return void
+     * @throws Exception
+     */
+    public function createOrganisationAutorisation(array $data): void
+    {
+        $this->logger->info('Create organisation autorisation');
+
+        $organisationAutorisation = new OrganisationAutorisation();
+        $organisationAutorisation->setIdentifiantOrganisationPlage("IPE");
+
+        try {
+            $dateAttribution = new DateTime(
+                $data[self::DEPOT_MR_005]['dateAttribution']['year'] . '-' .
+                $data[self::DEPOT_MR_005]['dateAttribution']['month'] . '-' .
+                $data[self::DEPOT_MR_005]['dateAttribution']['day']);
+        } catch (Exception $e) {
+            throw new Exception("Date attribution is not valid");
+        }
+        $organisationAutorisation->setDateDebut($dateAttribution);
+        $organisationAutorisation->setDateFin(null);
+        $organisationAutorisation->setPerimetre('activite');
+        $organisationAutorisation->setTypeAutorisation('mr005');
+
+        $this->entityManager->persist($organisationAutorisation);
+        $this->entityManager->flush();
     }
 }

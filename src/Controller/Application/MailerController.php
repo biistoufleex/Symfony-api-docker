@@ -28,7 +28,6 @@ class MailerController extends AbstractController
                 'from@mail.fr',
                 'to@mail.fr',
                 'subject',
-                'body',
             );
         } catch (\Exception $e) {
             return new Response('ko');

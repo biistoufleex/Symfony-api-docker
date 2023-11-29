@@ -36,7 +36,6 @@ class EmailService
                 $this->emailApplication,
                 $responsable,
                 MessageConstants::EMAIL_SUBJECT_DEPOT,
-                MessageConstants::EMAIL_BODY_DEPOT
             );
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
@@ -46,12 +45,12 @@ class EmailService
     /**
      * @throws Exception
      */
-    public function sendEmail(string $from, string $to, string $subject, string $content): void
+    public function sendEmail(string $to, string $subject, string $content): void
     {
         $this->logger->info('Sending email to ' . $to);
 
         $email = $this->emailFactory->createEmail(
-            $from,
+            $this->emailApplication,
             $to,
             $subject,
             $content

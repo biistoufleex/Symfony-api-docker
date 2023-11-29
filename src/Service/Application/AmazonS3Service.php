@@ -25,46 +25,12 @@ class AmazonS3Service
     }
 
     /**
-     * @throws Exception
-     */
-    public function uploadFile(string $bucket, string $key, string $filePath): void
-    {
-        try {
-            $this->s3Client->putObject(
-                [
-                    self::BUCKET => $bucket,
-                    self::KEY => $key,
-                    'Body' => fopen($filePath, 'r'),
-                ]
-            );
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function deleteFile(string $bucket, string $key): void
-    {
-        try {
-            $this->s3Client->deleteObject(
-                [
-                    self::BUCKET => $bucket,
-                    self::KEY => $key,
-                ]
-            );
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    /**
      * @return array<string>
      * @throws Exception
      */
     public function listFiles(string $bucket): array
     {
+        $this->logger->info('S3 list files');
         try {
             $result = $this->s3Client->listObjects(
                 [
@@ -79,11 +45,13 @@ class AmazonS3Service
     }
 
     /**
-     * @throws Exception
      * @return array<string>
+     * @throws Exception
      */
     public function listBucket(): array
     {
+        $this->logger->info('S3 list bucket');
+
         try {
             $result = $this->s3Client->listBuckets();
         } catch (Exception $e) {
@@ -100,7 +68,8 @@ class AmazonS3Service
      */
     public function saveFileInS3(array $formData, array $fileData): void
     {
-        // test array value
+        $this->logger->info('S3 save file');
+
         try {
             $this->uploadFile(
                 $_ENV['AWS_BUCKET'],
@@ -114,16 +83,82 @@ class AmazonS3Service
         }
     }
 
-    public function getFileFromS3(string $numeroRecepice, string $filename): ?string
+    /**
+     * @throws Exception
+     */
+    public function uploadFile(string $bucket, string $key, string $filePath): void
     {
-        $savedPath = $this->projectDir . '/public/tmp/' . $filename;
+        $this->logger->info('S3 upload file');
+
+        try {
+            $this->s3Client->putObject(
+                [
+                    self::BUCKET => $bucket,
+                    self::KEY => $key,
+                    'Body' => fopen($filePath, 'r'),
+                ]
+            );
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function downloadFile(string $numeroRecepice, string $filename): ?string
+    {
+        $this->logger->info('S3 get file');
+
+        $savedPath = $this->projectDir . '/public/tmp/' . $numeroRecepice . "-" . $filename;
         $this->s3Client->getObject(
             [
                 self::BUCKET => $_ENV['AWS_BUCKET'],
-                self::KEY    => $numeroRecepice . "-" . $filename,
-                'SaveAs'     => $savedPath,
+                self::KEY => $numeroRecepice . "-" . $filename,
+                'SaveAs' => $savedPath,
             ]
         );
         return $savedPath;
+    }
+
+    public function deleteFileFromS3(string $numeroRecepice, string $filename): void
+    {
+        $this->logger->info('S3 delete file');
+
+        try {
+            $this->s3Client->deleteObject(
+                [
+                    self::BUCKET => $_ENV['AWS_BUCKET'],
+                    self::KEY => $numeroRecepice . "-" . $filename,
+                ]
+            );
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param string $numeroRecepice
+     * @param string $filename
+     * @return string
+     */
+    public function generatePresignedUrl(string $numeroRecepice, string $filename): string //TODO: replace download by this
+    {
+        $this->logger->info('S3 generate presigned url');
+
+        try {
+            $cmd = $this->s3Client->getCommand(
+                'GetObject',
+                [
+                    self::BUCKET => $_ENV['AWS_BUCKET'],
+                    self::KEY => $numeroRecepice . "-" . $filename,
+                ]
+            );
+            $request = $this->s3Client->createPresignedRequest($cmd, '+20 minutes');
+            return (string)$request->getUri();
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+        return '';
     }
 }

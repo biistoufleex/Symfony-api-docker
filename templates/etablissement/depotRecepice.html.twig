@@ -1,161 +1,177 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <div class="container-fluid">
+<div class="container">
+    <div class="row justify-content-center">
+
+        <div class="text-start w-75 pb-5">
+            {{ message | raw }}
+        </div>
+
         <div class="row justify-content-center">
-
-            <div class="text-start w-75 pb-5">
-                {{ message | raw }}
-
-            </div>
-
             {{ form_start(form, {
                 attr: {
                     'class': 'needs-validation d-flex justify-content-center'
                 }
             }) }}
 
+
             {% if readonly %}
-                <fieldset disabled="disabled">
-            {% endif %}
-            <div class="d-inline-block w-auto align-middle">
-                <div class="row p-3 border" style="background-color: #DADADA">
-                    <h4 class="">L’ORGANISME DEMANDEUR</h4>
-                </div>
-                <div class="row border-left">
-                    <div class="col-6">
-                        {{ form_label(form.ipe) }}
+            <fieldset disabled="disabled">
+                {% endif %}
+                <div class="d-inline-block w-auto align-middle">
+                    <div class="row p-3 border" style="background-color: #DADADA">
+                        <h4 class="">L’ORGANISME DEMANDEUR</h4>
                     </div>
-                    <div class="col-6 p-0">
-                        {{ form_widget(form.ipe, {
-                            attr: {
-                                'readonly': 'readonly',
-                                'value': ipe
-                            }
-                        }) }}
-                    </div>
-                </div>
-                <div class="row border-left">
-                    <div class="col-6">
-                        {{ form_label(form.finess) }}
-                    </div>
-                    <div class="col-6 p-0">
-                        {{ form_widget(form.finess, {
-                            attr: {
-                                'readonly': 'readonly',
-                                'value': finess
-                            }
-                        }) }}
-                    </div>
-                </div>
-                <div class="row border-left border-bottom">
-                    <div class="col-6">
-                        {{ form_label(form.raisonSociale) }}
-                    </div>
-                    <div class="col-6 p-0">
-                        {{ form_widget(form.raisonSociale, {
-                            attr: {
-                                'readonly': 'readonly',
-                                'value': raisonSociale
-                            }
-                        }) }}
-                    </div>
-                </div>
-
-                <div class="row p-3 mt-3 border" style="background-color: #DADADA">
-                    <h4 class="">IDENTIFICATION DU RESPONSABLE LEGAL DE L’ORGANISME</h4>
-                </div>
-                <div class="row border-left border-bottom border-right">
-                    <div class="col-2 border">
-                        {{ form_label(form.civilite) }}
-                    </div>
-                    <div class="col-2 border px-0">
-                        {{ form_widget(form.civilite) }}
-                    </div>
-                    <div class="col-2 border">
-                        {{ form_label(form.prenom) }}
-                    </div>
-                    <div class="col-2 border px-0">
-                        {{ form_widget(form.prenom) }}
-                        <div class="invalid-tooltip">
-                            {{ form_errors(form.prenom) }}
+                    <div class="row border-left">
+                        <div class="col-6">
+                            {{ form_label(form.ipe) }}
+                        </div>
+                        <div class="col-6 p-0">
+                            {{ form_widget(form.ipe, {
+                                attr: {
+                                    'value': ipe
+                                },
+                            }) }}
                         </div>
                     </div>
-                    <div class="col-2 border">
-                        {{ form_label(form.nom) }}
-                    </div>
-                    <div class="col-2 px-0">
-                        {{ form_widget(form.nom) }}
-                        <div class="invalid-tooltip">
-                            {{ form_errors(form.nom) }}
+                    <div class="row border-left">
+                        <div class="col-6">
+                            {{ form_label(form.finess) }}
                         </div>
-                    </div>
-                    <div class="col-2 border">
-                        {{ form_label(form.fonction) }}
-                    </div>
-                    <div class="col-10 px-0">
-                        {{ form_widget(form.fonction) }}
-                        <div class="invalid-tooltip">
-                            {{ form_errors(form.fonction) }}
-                        </div>
-                    </div>
-                    <div class="col-2 border">
-                        {{ form_label(form.courriel) }}
-                    </div>
-                    <div class="col-10 px-0">
-                        {{ form_widget(form.courriel) }}
-                        <div class="invalid-tooltip">
-                            {{ form_errors(form.courriel) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row p-3 mt-3 border" style="background-color:#B4C6E7">
-                    <h4 class="">Autorisation Cnil d’accès aux données d’activité : MR005</h4>
-                </div>
-                <div class="row">
-                    <div class="col-4 border">
-                        {{ form_label(form.numeroRecepice) }}
-                    </div>
-                    <div class="col-8 px-0">
-                        {{ form_widget(form.numeroRecepice) }}
-                        <div class="text-danger">
-                            {{ form_errors(form.numeroRecepice, {
-                                'attr': {
-                                    'class': 'text-danger'
+                        <div class="col-6 p-0">
+                            {{ form_widget(form.finess, {
+                                attr: {
+                                    'value': finess
                                 }
                             }) }}
                         </div>
                     </div>
-                    <div class="col-4 border">
-                        {{ form_label(form.dateAttribution) }}
-                    </div>
-                    <div class="col-8 px-0">
-                        {{ form_widget(form.dateAttribution) }}
-                        <div class="invalid-tooltip">
-                            {{ form_errors(form.dateAttribution) }}
+                    <div class="row border-left border-bottom">
+                        <div class="col-6">
+                            {{ form_label(form.raisonSociale) }}
+                        </div>
+                        <div class="col-6 p-0">
+                            {{ form_widget(form.raisonSociale, {
+                                attr: {
+                                    'value': raisonSociale
+                                }
+                            }) }}
                         </div>
                     </div>
-                    <div class="col-4 border">
-                        {{ form_label(form.filePath) }}
-                    </div>
-                    <div class="col-8 px-0">
-                        {{ form_widget(form.filePath) }}
-                        <div class="invalid-tooltip">
-                            {{ form_errors(form.filePath) }}
-                        </div>
-                    </div>
-                </div>
-                {% if readonly == false %}
-                {{ form_row(form.send, {
-                    attr: {
-                        'class': 'btn btn-primary mt-3'
-                    }
-                }) }}
-                {% endif %}
-            </div>
 
-            {% if readonly %}
-                </fieldset>
+                    <div class="row p-3 mt-3 border" style="background-color: #DADADA">
+                        <h4 class="">IDENTIFICATION DU RESPONSABLE LEGAL DE L’ORGANISME</h4>
+                    </div>
+                    <div class="row border-left border-bottom border-right">
+                        <div class="col-2 border">
+                            {{ form_label(form.civilite) }}
+                        </div>
+                        <div class="col-2 border px-0">
+                            {{ form_widget(form.civilite) }}
+                        </div>
+                        <div class="col-2 border">
+                            {{ form_label(form.prenom) }}
+                        </div>
+                        <div class="col-2 border px-0">
+                            {{ form_widget(form.prenom) }}
+                            <div class="invalid-tooltip">
+                                {{ form_errors(form.prenom) }}
+                            </div>
+                        </div>
+                        <div class="col-2 border">
+                            {{ form_label(form.nom) }}
+                        </div>
+                        <div class="col-2 px-0">
+                            {{ form_widget(form.nom) }}
+                            <div class="invalid-tooltip">
+                                {{ form_errors(form.nom) }}
+                            </div>
+                        </div>
+                        <div class="col-2 border">
+                            {{ form_label(form.fonction) }}
+                        </div>
+                        <div class="col-10 px-0">
+                            {{ form_widget(form.fonction) }}
+                            <div class="invalid-tooltip">
+                                {{ form_errors(form.fonction) }}
+                            </div>
+                        </div>
+                        <div class="col-2 border">
+                            {{ form_label(form.courriel) }}
+                        </div>
+                        <div class="col-10 px-0">
+                            {{ form_widget(form.courriel) }}
+                            <div class="invalid-tooltip">
+                                {{ form_errors(form.courriel) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row p-3 mt-3 border" style="background-color:#B4C6E7">
+                        <h4 class="">Autorisation Cnil d’accès aux données d’activité : MR005</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 border">
+                            {{ form_label(form.numeroRecepice) }}
+                        </div>
+                        <div class="col-8 px-0">
+                            {{ form_widget(form.numeroRecepice) }}
+                            <div class="text-danger">
+                                {{ form_errors(form.numeroRecepice, {
+                                    'attr': {
+                                        'class': 'text-danger'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+                        <div class="col-4 border">
+                            {{ form_label(form.dateAttribution) }}
+                        </div>
+                        <div class="col-8 px-0">
+                            {{ form_widget(form.dateAttribution) }}
+                            <div class="invalid-tooltip">
+                                {{ form_errors(form.dateAttribution) }}
+                            </div>
+                        </div>
+                        <div class="col-4 border">
+                            {{ form_label(form.filePath) }}
+                            {% if form.vars.method == "PUT" %}
+                                {% if button_dowload_file is defined %}
+                                    <a href="/tmp/{{ button_dowload_file.filename }}"
+                                       download="{{ button_dowload_file.filename }}">{{ button_dowload_file.label }}</a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                                        <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5
+                                            0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5
+                                            0 0 1-.5-.5"
+                                        />
+                                        <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0
+                                            1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"
+                                        />
+                                    </svg>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="col-8 px-0">
+                            {{ form_widget(form.filePath) }}
+                            <div class="invalid-tooltip">
+                                {{ form_errors(form.filePath) }}
+                            </div>
+                        </div>
+                    </div>
+                    {% if readonly == false %}
+                        <div class="row">
+                            {{ form_row(form.send, {
+                                attr: {
+                                    'class': 'btn btn-primary mt-3'
+                                },
+                            }) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if readonly %}
+            </fieldset>
             {% endif %}
 
             {{ form_end(form) }}
@@ -184,4 +200,4 @@
                 })
         })();
     </script>
-{% endblock %}
+    {% endblock %}

@@ -35,6 +35,7 @@ class EtablissementController extends AbstractController
     private const RECEPICE = 'recepice';
     private const READONLY = 'readonly';
     private const IPE_FAKE = '000000022';
+    const DEMANDE_NOT_FOUND = 'La demande n\'existe pas ou n\'est pas accessible.';
     private ApplicationMessageService $applicationMessageService;
     private DepotMr005Service $depotMr005Service;
     private EmailService $emailService;
@@ -98,12 +99,23 @@ class EtablissementController extends AbstractController
 
         $message = $this->applicationMessageService->getStringMessageByUseCase(self::MESSAGE_DEPOT_RECEPICE);
 
-        # Si le formulaire a déjà été déposé, on l'affiche en lecture seule
-        $formData = $this->depotMr005FormulaireService->getDepotMr005FormulaireByIpe($ipe);
+
         $form = $this->createForm(DepotMr005Type::class, new DepotMr005Form(), ['disabled' => false]);
         $readonly = false;
+
+        # Si le formulaire a déjà été déposé, on l'affiche en lecture seule
+        $formData = $this->depotMr005FormulaireService->getDepotMr005FormulaireByIpe($ipe);
         if ($formData) {
-            $form = $this->createForm(DepotMr005Type::class, $formData, ['disabled' => true]);
+            $formtype = null;
+            try {
+                $formtype = $this->depotMr005FormulaireService->toDepotForm($formData);
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
+                return $this->render('errors.html.twig',
+                    ['message' => self::DEMANDE_NOT_FOUND]);
+            }
+
+            $form = $this->createForm(DepotMr005Type::class, $formtype, ['disabled' => true]);
             $readonly = true;
         }
 
