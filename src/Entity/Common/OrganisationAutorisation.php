@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Api;
+namespace App\Entity\Common;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\Api\OrganisationAutorisationRepository;
@@ -102,5 +102,21 @@ class OrganisationAutorisation
         $this->typeAutorisation = $typeAutorisation;
 
         return $this;
+    }
+
+    public function getDateDebutToString(): string
+    {
+        if ($this->dateDebut === null) {
+            return '';
+        }
+        return $this->dateDebut->format('d/m/Y');
+    }
+
+    public function getDateFinToString(): string
+    {
+        if ($this->dateFin === null) {
+            return '';
+        }
+        return $this->dateFin->format('d/m/Y');
     }
 }

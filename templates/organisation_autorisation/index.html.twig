@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Habilitations specifiques</h1>
+        <div id="datatable">Loading...</div>
+    </div>
+
+    {% include 'flash.html.twig' %}
+
+    <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Datatables settings
+            $('#datatable').initDataTables({{ datatable_settings(datatable) }}, {
+                "searching": true,
+                language
+            })
+        });
+    </script>
+{% endblock %}

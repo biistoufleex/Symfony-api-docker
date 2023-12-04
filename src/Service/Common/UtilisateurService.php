@@ -10,7 +10,6 @@ use App\Mapper\Api\EtablissementMapper;
 use App\Mapper\Api\UtilisateurMapper;
 use App\Repository\Api\UtilisateurRepository;
 use App\Service\Api\ApiEtablissementService;
-use App\Service\Api\OrganisationAutorisationService;
 use App\Service\Api\RoleApplicationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;

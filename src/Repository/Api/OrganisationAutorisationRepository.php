@@ -2,7 +2,7 @@
 
 namespace App\Repository\Api;
 
-use App\Entity\Api\OrganisationAutorisation;
+use App\Entity\Common\OrganisationAutorisation;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

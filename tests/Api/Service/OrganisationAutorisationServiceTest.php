@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api\Service;
 
-use App\Service\Api\OrganisationAutorisationService;
+use App\Service\Common\OrganisationAutorisationService;
 use App\Tests\Api\data\fakeObject\FakeHabilitationsOrganisations;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

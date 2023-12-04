@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures\Api;
 
-use App\Entity\Api\OrganisationAutorisation;
+use App\Entity\Common\OrganisationAutorisation;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;

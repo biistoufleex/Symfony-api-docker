@@ -19,5 +19,3 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'datatables.net/js/jquery.dataTables.js';
 import language from "datatables.net-plugins/i18n/fr-FR.mjs";
 global.language = language;
-
-console.log('Hello Webpack Encore! Edit me in assets/app.js');

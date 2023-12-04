@@ -26,7 +26,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Symfony Api Docker');
+            ->setTitle('Scansante Admin');
     }
 
     public function configureMenuItems(): iterable

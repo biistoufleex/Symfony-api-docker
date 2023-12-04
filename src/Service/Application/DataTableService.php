@@ -3,8 +3,8 @@
 namespace App\Service\Application;
 
 use App\Entity\Application\DepotMr005;
+use App\Entity\Common\OrganisationAutorisation;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\DateTimeColumn;
 use Omines\DataTablesBundle\Column\TextColumn;
@@ -75,6 +75,45 @@ class DataTableService
                         ->leftJoin('e.depotMr005Formulaire', 'c')
                         ->where('e.validated = ' . ($validated ? 'true' : 'false'))
                         ->orderBy('e.dateSoumission', 'ASC');
+                },
+            ]);
+        return $dataTable;
+    }
+
+
+    public function getOrganisationAutorisationDataTable(): DataTable
+    {
+        $dataTable = $this->dataTableFactory->create();
+        $dataTable
+            ->setName('organisation_autorisation')
+            ->add('identifiantOrganisationPlage', TextColumn::class, ['label' => 'Identifiant organisation plage'])
+            ->add('dateDebut', DateTimeColumn::class, [
+                'label' => 'Date de début', 'format' => 'd/m/Y'
+            ])
+            ->add('dateFin', DateTimeColumn::class, [
+                'label' => 'Date de fin', 'format' => 'd/m/Y'
+            ])
+            ->add('perimetre', TextColumn::class, ['label' => 'Périmètre'])
+            ->add('typeAutorisation', TextColumn::class, ['label' => 'Type d\'autorisation'])
+            ->add('buttonUpdate', TextColumn::class, [
+                'label' => 'Modifier',
+                'render' => function ($value, $context) {
+                    return '<a href="/habilitation/update/' . $context->getId() . '">Modifier</a>';
+                },
+            ])
+            ->add('buttonDelete', TextColumn::class, [
+                'label' => 'Supprimer',
+                'render' => function ($value, $context) {
+                    return '<a href="/habilitation/delete/' . $context->getId() . '">Supprimer</a>';
+                },
+            ])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => OrganisationAutorisation::class,
+                'query' => function (QueryBuilder $builder) {
+                    $builder
+                        ->select('e')
+                        ->from(OrganisationAutorisation::class, 'e')
+                        ->orderBy('e.dateDebut', 'ASC');
                 },
             ]);
         return $dataTable;

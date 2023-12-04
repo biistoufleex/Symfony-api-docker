@@ -1,0 +1,15 @@
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div id="alert-message" class="alert alert-{{ label }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<script>
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#alert-message').fadeOut('slow');
+        }, 2000);
+    });
+</script>

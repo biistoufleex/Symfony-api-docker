@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service\Api;
+namespace App\Service\Common;
 
 use App\constants\MessageConstants;
-use App\Entity\Api\OrganisationAutorisation;
+use App\Entity\Common\OrganisationAutorisation;
 use App\Repository\Api\OrganisationAutorisationRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,14 +16,14 @@ class OrganisationAutorisationService
     private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;
     private OrganisationAutorisationRepository $organisationAutorisationRepository;
-
     public function __construct(
         LoggerInterface $logger,
         EntityManagerInterface $entityManager,
-        OrganisationAutorisationRepository $organisationAutorisationRepository)
+        OrganisationAutorisationRepository $organisationAutorisationRepository,
+    )
     {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
+        $this->logger                             = $logger;
+        $this->entityManager                      = $entityManager;
         $this->organisationAutorisationRepository = $organisationAutorisationRepository;
     }
 
@@ -108,6 +108,53 @@ class OrganisationAutorisationService
         $organisationAutorisation->setTypeAutorisation('mr005');
 
         $this->entityManager->persist($organisationAutorisation);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param string $id
+     * @param array $data
+     * @return void
+     * @throws Exception
+     */
+    public function updateOrganisationAutorisation(string $id, array $data): void
+    {
+        $organisationAutorisation = $this->organisationAutorisationRepository->find($id);
+
+        if ($organisationAutorisation === null) {
+            throw new Exception("Organisation autorisation not found");
+        }
+
+        $organisationAutorisation->setIdentifiantOrganisationPlage($data['identifiantOrganisationPlage']);
+        $dateDebut = new DateTime($data['dateDebut']);
+        $organisationAutorisation->setDateDebut($dateDebut);
+        $dateFin = $data['dateFin']? new DateTime($data['dateFin']) : null;
+        $organisationAutorisation->setDateFin($dateFin);
+        $organisationAutorisation->setPerimetre($data['perimetre']);
+        $organisationAutorisation->setTypeAutorisation($data['typeAutorisation']);
+
+        $this->entityManager->persist($organisationAutorisation);
+        $this->entityManager->flush();
+    }
+
+    public function getOrganisationAutorisationById(string $id): ?OrganisationAutorisation
+    {
+        return $this->organisationAutorisationRepository->find($id);
+    }
+
+    /**
+     * @param string $id
+     * @throws Exception
+     */
+    public function deleteOrganisationAutorisation(string $id): void
+    {
+        $organisationAutorisation = $this->organisationAutorisationRepository->find($id);
+
+        if ($organisationAutorisation === null) {
+            throw new Exception("Organisation autorisation not found");
+        }
+
+        $this->entityManager->remove($organisationAutorisation);
         $this->entityManager->flush();
     }
 }
